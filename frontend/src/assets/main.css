@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary-50: 248 245 255;
+    --color-primary-100: 224 208 255;
+    --color-primary-200: 213 192 255;
+    --color-primary-300: 201 176 255;
+    --color-primary-400: 190 160 255;
+    --color-primary-500: 178 144 255;
+    --color-primary-600: 166 128 255;
+    --color-primary-700: 154 112 255;
+    --color-primary-800: 142 96 255;
+    --color-primary-900: 130 80 255;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 text-white px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-primary-700 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary-600 border-2 border-primary-600 px-6 py-3 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-primary-50 transition-colors;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 border-2 border-primary-100;
+  }
+
+  .purpose-heading {
+    @apply font-black tracking-wider uppercase text-primary-900;
+  }
+} 
