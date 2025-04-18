@@ -1,25 +1,9 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-primary-900">Talent Dashboard</h1>
-          <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage your applications and profile</p>
-        </div>
-        <div class="flex justify-end">
-          <button 
-            @click="editProfile"
-            class="bg-primary-600 text-white px-3 py-1.5 rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-1.5 text-sm"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-            </svg>
-            Edit Profile
-          </button>
-        </div>
-      </div>
+    <NavigationBar />
 
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
       <!-- Profile Overview -->
       <div class="bg-white rounded-lg shadow-md p-6 mb-8">
         <div class="flex flex-col md:flex-row gap-8">
@@ -32,14 +16,17 @@
                   :alt="user.name"
                   class="h-40 w-40 rounded-full object-cover ring-4 ring-primary-100"
                 />
-                <button class="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full hover:bg-primary-700 transition-colors">
+                <button 
+                  @click="editProfile"
+                  class="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full hover:bg-primary-700 transition-colors"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
                 </button>
               </div>
               <div class="mt-4 text-center w-full">
-                <h2 class="text-xl font-bold text-primary-900">{{ user.name }}</h2>
+                <h2 class="text-xl font-bold text-[#a680ff]">{{ user.name }}</h2>
                 <p class="text-gray-600">{{ user.title }}</p>
                 <div class="mt-3 flex flex-col gap-2">
                   <span v-if="user.isVerified" class="inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -65,19 +52,19 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div class="bg-gray-50 p-4 rounded-lg">
                 <div class="text-sm text-gray-600 mb-1">Location</div>
-                <div class="font-medium text-primary-900">{{ user.location }}</div>
+                <div class="font-medium text-[#a680ff]">{{ user.location }}</div>
               </div>
               <div class="bg-gray-50 p-4 rounded-lg">
                 <div class="text-sm text-gray-600 mb-1">Experience</div>
-                <div class="font-medium text-primary-900">{{ user.experience }}</div>
+                <div class="font-medium text-[#a680ff]">{{ user.experience }}</div>
               </div>
               <div class="bg-gray-50 p-4 rounded-lg">
                 <div class="text-sm text-gray-600 mb-1">Availability</div>
-                <div class="font-medium text-primary-900">{{ user.availability }}</div>
+                <div class="font-medium text-[#a680ff]">{{ user.availability }}</div>
               </div>
               <div class="bg-gray-50 p-4 rounded-lg">
                 <div class="text-sm text-gray-600 mb-1">Languages</div>
-                <div class="font-medium text-primary-900">{{ user.languages.join(', ') }}</div>
+                <div class="font-medium text-[#a680ff]">{{ user.languages?.join(', ') || 'Not specified' }}</div>
               </div>
             </div>
 
@@ -104,19 +91,19 @@
                 <div class="grid grid-cols-2 gap-4">
                   <div class="flex flex-col">
                     <div class="text-sm text-gray-600 mb-1">Prayer Time</div>
-                    <div class="font-medium text-primary-900 capitalize">{{ user.faithAlignment.prayerTimePreference }}</div>
+                    <div class="font-medium text-[#a680ff] capitalize">{{ user.faithAlignment.prayerTimePreference }}</div>
                   </div>
                   <div class="flex flex-col">
                     <div class="text-sm text-gray-600 mb-1">Hijab Policy</div>
-                    <div class="font-medium text-primary-900 capitalize">{{ user.faithAlignment.hijabPolicy.replace('_', ' ') }}</div>
+                    <div class="font-medium text-[#a680ff] capitalize">{{ user.faithAlignment.hijabPolicy.replace('_', ' ') }}</div>
                   </div>
                   <div class="flex flex-col">
                     <div class="text-sm text-gray-600 mb-1">Gender Preference</div>
-                    <div class="font-medium text-primary-900 capitalize">{{ user.faithAlignment.genderPreference }}</div>
+                    <div class="font-medium text-[#a680ff] capitalize">{{ user.faithAlignment.genderPreference }}</div>
                   </div>
                   <div class="flex flex-col">
                     <div class="text-sm text-gray-600 mb-1">Dietary Requirements</div>
-                    <div class="font-medium text-primary-900 capitalize">{{ user.faithAlignment.dietaryRequirements }}</div>
+                    <div class="font-medium text-[#a680ff] capitalize">{{ user.faithAlignment.dietaryRequirements }}</div>
                   </div>
                 </div>
               </div>
@@ -147,7 +134,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Applications</p>
-              <p class="text-2xl font-bold text-primary-900 mt-1">8</p>
+              <p class="text-2xl font-bold text-[#a680ff] mt-1">8</p>
             </div>
             <div class="bg-primary-100 p-3 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -174,7 +161,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Profile Views</p>
-              <p class="text-2xl font-bold text-primary-900 mt-1">24</p>
+              <p class="text-2xl font-bold text-[#a680ff] mt-1">24</p>
             </div>
             <div class="bg-green-100 p-3 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -202,7 +189,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Profile Completion</p>
-              <p class="text-2xl font-bold text-primary-900 mt-1">85%</p>
+              <p class="text-2xl font-bold text-[#a680ff] mt-1">85%</p>
             </div>
             <div class="bg-blue-100 p-3 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -223,7 +210,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-600">Saved Jobs</p>
-              <p class="text-2xl font-bold text-primary-900 mt-1">5</p>
+              <p class="text-2xl font-bold text-[#a680ff] mt-1">5</p>
             </div>
             <div class="bg-yellow-100 p-3 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -251,7 +238,7 @@
       <!-- Recent Applications -->
       <div class="bg-white rounded-lg shadow-md border border-primary-100">
         <div class="p-6 border-b border-gray-200">
-          <h2 class="text-xl font-semibold text-primary-900">Recent Applications</h2>
+          <h2 class="text-xl font-semibold text-[#a680ff]">Recent Applications</h2>
         </div>
         <div class="divide-y divide-gray-200">
           <div v-for="application in applications" :key="application.id" class="p-6">
@@ -263,7 +250,7 @@
                   class="h-12 w-12 rounded-full object-cover ring-2 ring-primary-200"
                 />
                 <div>
-                  <h3 class="text-lg font-medium text-primary-900">{{ application.jobTitle }}</h3>
+                  <h3 class="text-lg font-medium text-[#a680ff]">{{ application.jobTitle }}</h3>
                   <p class="text-gray-600">{{ application.company }}</p>
                   <div class="flex items-center mt-2">
                     <span class="text-sm text-gray-500">Applied {{ application.appliedDate }}</span>
@@ -291,6 +278,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { talents } from '@/data/talent'
 import type { Talent } from '@/types/index'
+import NavigationBar from '@/components/NavigationBar.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

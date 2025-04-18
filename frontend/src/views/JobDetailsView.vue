@@ -23,7 +23,7 @@
             />
           </div>
           <div class="flex-1 text-center sm:text-left">
-            <h1 class="text-2xl sm:text-3xl font-bold text-primary-900 mb-2">{{ job.title }}</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-[#a680ff] mb-2">{{ job.title }}</h1>
             <p class="text-lg sm:text-xl text-gray-600 mb-4">{{ job.company }}</p>
             <div class="flex flex-wrap justify-center sm:justify-start gap-2 text-gray-600">
               <span class="flex items-center text-sm">
@@ -109,13 +109,13 @@
 
         <!-- Job Description -->
         <div class="mb-6">
-          <h2 class="text-lg font-semibold text-primary-900 mb-4">Job Description</h2>
+          <h2 class="text-lg font-semibold text-[#a680ff] mb-4">Job Description</h2>
           <p class="text-gray-700 whitespace-pre-line">{{ job.description }}</p>
         </div>
 
         <!-- Requirements -->
         <div class="mb-6">
-          <h2 class="text-lg font-semibold text-primary-900 mb-4">Requirements</h2>
+          <h2 class="text-lg font-semibold text-[#a680ff] mb-4">Requirements</h2>
           <ul class="list-disc list-inside space-y-2 text-gray-700">
             <li v-for="requirement in job.requirements" :key="requirement">
               {{ requirement }}

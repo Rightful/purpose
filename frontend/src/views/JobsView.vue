@@ -1,32 +1,34 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8 text-primary-900">Faith-Aligned Jobs</h1>
-    
+    <h1 class="text-2xl sm:text-3xl font-bold text-[#a680ff]">Available Jobs</h1>
+    <p class="text-lg text-gray-600 mb-8">Find faith-aligned opportunities that match your values</p>
+
     <!-- Search and Filters -->
-    <div class="mb-8">
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex-1 relative">
+    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+      <div class="flex-1">
+        <div class="relative">
           <input
             v-model="searchQuery"
             type="text"
-            :placeholder="isMobile ? 'Search jobs...' : 'Search jobs by title, company, location, or skills...'"
-            class="w-full p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
-            @input="handleSearch"
+            placeholder="Search jobs..."
+            class="w-full pl-10 pr-4 py-2 border border-[#a680ff]/20 rounded-lg focus:ring-2 focus:ring-[#a680ff]/20 focus:border-[#a680ff] placeholder:text-[#a680ff]/40 focus:outline-none focus:ring-offset-0"
           />
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          <MagnifyingGlassIcon class="h-5 w-5 text-[#a680ff] absolute left-3 top-1/2 transform -translate-y-1/2" />
         </div>
-        <select
-          v-model="locationFilter"
-          class="p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
-        >
-          <option value="">All Locations</option>
-          <option value="Amsterdam, NL">Amsterdam</option>
-          <option value="Rotterdam, NL">Rotterdam</option>
-          <option value="Utrecht, NL">Utrecht</option>
-          <option value="The Hague, NL">The Hague</option>
-        </select>
+      </div>
+      <div class="flex-1">
+        <div class="relative">
+          <select
+            v-model="selectedLocation"
+            class="w-full pl-10 pr-4 py-2 border border-[#a680ff]/20 rounded-lg focus:ring-2 focus:ring-[#a680ff]/20 focus:border-[#a680ff] appearance-none bg-white text-[#a680ff] placeholder:text-[#a680ff]/40 focus:outline-none focus:ring-offset-0"
+          >
+            <option value="" class="text-[#a680ff]/40">All Locations</option>
+            <option v-for="location in locations" :key="location" :value="location">
+              {{ location }}
+            </option>
+          </select>
+          <MapPinIcon class="h-5 w-5 text-[#a680ff] absolute left-3 top-1/2 transform -translate-y-1/2" />
+        </div>
       </div>
     </div>
 
@@ -35,7 +37,7 @@
       <div
         v-for="job in filteredJobs"
         :key="job.id"
-        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-primary-100 flex flex-col h-full"
+        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-[#a680ff]/20 flex flex-col h-full"
       >
         <div class="flex-grow">
           <div class="flex items-start space-x-4">
@@ -43,11 +45,11 @@
               <img
                 :src="job.companyLogo"
                 :alt="job.company"
-                class="h-16 w-16 rounded-full object-cover ring-2 ring-primary-200"
+                class="h-16 w-16 rounded-full object-cover ring-2 ring-[#a680ff]/20"
               />
             </div>
             <div class="flex-1 min-w-0">
-              <h2 class="text-xl font-semibold mb-2 text-primary-900">{{ job.title }}</h2>
+              <h2 class="text-xl font-semibold mb-2 text-[#a680ff]">{{ job.title }}</h2>
               <p class="text-gray-600 mb-2">{{ job.company }}</p>
               <p class="text-gray-500 mb-4">{{ job.location }}</p>
               
@@ -56,8 +58,8 @@
                   :class="[
                     'text-sm px-3 py-1 rounded-full inline-flex items-center gap-1',
                     job.type.toLowerCase() === 'full-time' 
-                      ? 'bg-primary-600 text-white border border-primary-700' 
-                      : 'bg-primary-50 text-primary-600 border border-primary-100'
+                      ? 'bg-[#a680ff] text-white border border-[#a680ff]' 
+                      : 'bg-[#a680ff]/10 text-[#a680ff] border border-[#a680ff]/20'
                   ]"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,42 +69,13 @@
                 </span>
               </div>
               
-              <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
-              
-              <div class="mb-4">
-                <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
-                <div class="flex flex-wrap gap-2">
-                  <span
-                    v-for="skill in job.requirements.slice(0, 3)"
-                    :key="skill"
-                    class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
-                  >
-                    {{ skill }}
-                  </span>
-                  <span
-                    v-if="job.requirements.length > 3"
-                    class="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200"
-                    @click="toggleShowAllRequirements(job.id)"
-                  >
-                    {{ isShowingAllRequirements(job.id) ? 'Show Less' : `+${job.requirements.length - 3} more` }}
-                  </span>
-                </div>
-                <div v-if="isShowingAllRequirements(job.id)" class="mt-2 flex flex-wrap gap-2">
-                  <span
-                    v-for="skill in job.requirements.slice(3)"
-                    :key="skill"
-                    class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
-                  >
-                    {{ skill }}
-                  </span>
-                </div>
-              </div>
+              <p class="text-gray-700 mb-6 line-clamp-4">{{ job.description }}</p>
             </div>
           </div>
         </div>
 
         <div class="mt-auto">
-          <div class="border-t border-gray-200 pt-4">
+          <div class="border-t border-[#a680ff]/20 pt-4">
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center">
                 <span
@@ -116,7 +89,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm text-gray-600">Halal Income</span>
+                <span class="text-sm text-[#a680ff]">Halal Income</span>
               </div>
               <div class="flex items-center">
                 <span
@@ -130,7 +103,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm text-gray-600">Prayer Friendly</span>
+                <span class="text-sm text-[#a680ff]">Prayer Friendly</span>
               </div>
               <div class="flex items-center">
                 <span
@@ -144,7 +117,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm text-gray-600">Flexible Hours</span>
+                <span class="text-sm text-[#a680ff]">Flexible Hours</span>
               </div>
               <div class="flex items-center">
                 <span
@@ -158,14 +131,14 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm text-gray-600">Modest Dress Code</span>
+                <span class="text-sm text-[#a680ff]">Modest Dress Code</span>
               </div>
             </div>
           </div>
         </div>
         
         <button
-          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 mt-4"
+          class="w-full bg-[#a680ff] text-white py-2 px-4 rounded-lg hover:bg-[#a680ff]/90 transition-colors flex items-center justify-center gap-2 mt-4"
           @click="viewJobDetails(job.id)"
         >
           <span>View Details</span>
@@ -178,7 +151,7 @@
 
     <!-- Loading State -->
     <div v-else class="flex justify-center items-center h-64">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a680ff]"></div>
     </div>
 
     <!-- No Results -->
@@ -186,7 +159,7 @@
       v-if="!loading && filteredJobs.length === 0"
       class="text-center py-12"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-primary-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-[#a680ff]/40 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       <p class="text-gray-600 text-lg">No jobs found matching your criteria.</p>
@@ -199,43 +172,36 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { jobs } from '@/data/jobs'
 import type { Job } from '@/types'
+import { MapPinIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
 const loading = ref(false)
 const searchQuery = ref('')
-const locationFilter = ref('')
+const selectedLocation = ref('')
 const expandedJobs = ref<Set<string>>(new Set())
 
-const isMobile = ref(window.innerWidth < 640)
-
-// Add window resize listener
-window.addEventListener('resize', () => {
-  isMobile.value = window.innerWidth < 640
+// Get unique locations
+const locations = computed(() => {
+  const locations = new Set(jobs.map(job => job.location))
+  return Array.from(locations)
 })
 
+// Filter jobs based on search query and location
 const filteredJobs = computed(() => {
   return jobs.filter(job => {
-    const matchesSearch = searchQuery.value === '' || 
+    const matchesSearch = 
       job.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       job.company.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      job.requirements.some(skill => 
-        skill.toLowerCase().includes(searchQuery.value.toLowerCase())
-      )
-    
-    const matchesLocation = locationFilter.value === '' || 
-      job.location === locationFilter.value
-    
+      job.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+    const matchesLocation = !selectedLocation.value || job.location === selectedLocation.value
+
     return matchesSearch && matchesLocation
   })
 })
 
 const formatSalary = (salary: Job['salary']) => {
   return `${salary.currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`
-}
-
-const handleSearch = () => {
-  // Debounce could be added here if needed
 }
 
 const isShowingAllRequirements = (jobId: string) => {

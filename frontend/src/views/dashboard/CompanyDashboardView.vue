@@ -1,23 +1,24 @@
 <template>
   <div class="min-h-screen bg-gray-50">
+    <NavigationBar />
+
+    <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+      <!-- Header with Post New Job Button -->
+      <div class="flex justify-between items-center mb-8">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-primary-900">Company Dashboard</h1>
+          <h1 class="text-2xl sm:text-3xl font-bold text-[#a680ff]">Company Dashboard</h1>
           <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage your job postings and view applications</p>
         </div>
-        <div class="flex justify-end">
-          <button 
-            @click="createNewJob"
-            class="bg-primary-600 text-white px-3 py-1.5 rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-1.5 text-sm"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-            </svg>
-            Post New Job
-          </button>
-        </div>
+        <button 
+          @click="createNewJob"
+          class="bg-primary-600 text-white px-2.5 py-1 rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-1 text-xs font-medium"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Post New Job
+        </button>
       </div>
 
       <!-- Stats Overview -->
@@ -137,6 +138,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import NavigationBar from '@/components/NavigationBar.vue'
 
 const router = useRouter()
 

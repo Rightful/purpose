@@ -90,7 +90,7 @@ export const useAuthStore = defineStore('auth', () => {
   const signOut = () => {
     user.value = null
     isAuthenticated.value = false
-    router.push('/auth/signin')
+    router.push('/')
   }
 
   return {
