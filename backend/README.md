@@ -1,13 +1,6 @@
 # Ummah Talent Backend
 
-A backend service for matching Muslim talent with faith-aligned job opportunities.
-
-## Features
-
-- Job-Talent matching based on skills and faith alignment
-- Authentication middleware
-- RESTful API endpoints
-- MongoDB integration
+This is the backend server for the Ummah Talent job board application. It provides API endpoints for job search and management.
 
 ## Setup
 
@@ -16,28 +9,55 @@ A backend service for matching Muslim talent with faith-aligned job opportunitie
 npm install
 ```
 
-2. Create a `.env` file in the root directory with:
-```
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-PORT=3000
-```
-
-3. Start the development server:
+2. Start the development server:
 ```bash
 npm run dev
 ```
 
+The server will start on port 3000 by default.
+
 ## API Endpoints
 
-### Authentication
-- POST `/api/auth/register` - Register a new user
-- POST `/api/auth/login` - Login user
+### Health Check
+- GET `/api/health`
+  - Returns server status
 
-### Matching
-- GET `/api/matching/jobs/:talentId` - Get matching jobs for a talent
-- GET `/api/matching/talents/:jobId` - Get matching talents for a job
-- GET `/api/matching/score/:jobId/:talentId` - Get match score between job and talent
+### Jobs
+- GET `/api/jobs`
+  - Returns all available jobs
+
+- GET `/api/jobs/search?q=<search_query>`
+  - Search jobs by title, company, location, or skills
+  - Query parameter `q` is used for searching
+
+## Development
+
+The server uses:
+- Express.js for the web server
+- CORS for cross-origin resource sharing
+- Nodemon for development auto-reload
+
+## Scripts
+
+- `npm start`: Start the production server
+- `npm run dev`: Start the development server with auto-reload
+
+## Environment Variables
+
+The server uses the following environment variables:
+
+- `PORT` - The port number for the server (default: 3000)
+
+## Deployment
+
+This backend is configured for deployment on Railway. The server will automatically use the `PORT` environment variable provided by Railway.
+
+## Features
+
+- Job-Talent matching based on skills and faith alignment
+- Authentication middleware
+- RESTful API endpoints
+- MongoDB integration
 
 ## Tech Stack
 
