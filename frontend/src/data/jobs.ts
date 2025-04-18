@@ -20,6 +20,12 @@ export const jobs: Job[] = [
       'Experience with Islamic finance principles',
       'Excellent problem-solving skills'
     ],
+    responsibilities: [
+      'Develop and maintain Islamic finance software solutions',
+      'Collaborate with cross-functional teams',
+      'Implement best practices in software development',
+      'Ensure code quality and performance'
+    ],
     experience: '5+ years',
     faithAlignment: {
       halalIncome: true,
@@ -50,6 +56,12 @@ export const jobs: Job[] = [
       '5+ years of marketing experience',
       'Strong understanding of halal market',
       'Excellent communication skills'
+    ],
+    responsibilities: [
+      'Develop and execute marketing strategies',
+      'Manage marketing campaigns',
+      'Analyze market trends',
+      'Coordinate with sales team'
     ],
     experience: '5+ years',
     faithAlignment: {
@@ -82,6 +94,12 @@ export const jobs: Job[] = [
       'Strong Python skills',
       'Understanding of AI ethics'
     ],
+    responsibilities: [
+      'Develop and implement machine learning models',
+      'Analyze large datasets',
+      'Create data visualizations',
+      'Collaborate with product teams'
+    ],
     experience: '3+ years',
     faithAlignment: {
       halalIncome: true,
@@ -108,6 +126,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['Business Development', 'Islamic Finance', 'Networking', 'Sales'],
+    responsibilities: [
+      'Identify and develop new business opportunities',
+      'Build and maintain client relationships',
+      'Negotiate contracts and partnerships',
+      'Develop market strategies'
+    ],
     experience: '5+ years',
     faithAlignment: {
       halalIncome: true,
@@ -134,6 +158,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['Product Management', 'Agile', 'User Stories', 'Market Research', 'Financial Services'],
+    responsibilities: [
+      'Define product vision and strategy',
+      'Manage product development lifecycle',
+      'Gather and analyze user feedback',
+      'Coordinate with development teams'
+    ],
     experience: '4+ years',
     faithAlignment: {
       halalIncome: true,
@@ -160,6 +190,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['JavaScript', 'React', 'CSS', 'Accessibility', 'Healthcare'],
+    responsibilities: [
+      'Develop responsive web applications',
+      'Implement UI/UX designs',
+      'Ensure accessibility standards',
+      'Optimize application performance'
+    ],
     experience: '2+ years',
     faithAlignment: {
       halalIncome: true,
@@ -186,6 +222,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['Content Writing', 'SEO', 'Social Media', 'Editing', 'Muslim Culture'],
+    responsibilities: [
+      'Create engaging content',
+      'Research and fact-check articles',
+      'Optimize content for SEO',
+      'Manage social media content'
+    ],
     experience: '2+ years',
     faithAlignment: {
       halalIncome: true,
@@ -212,6 +254,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['HR Management', 'Diversity & Inclusion', 'Policy Development', 'Recruitment'],
+    responsibilities: [
+      'Develop HR policies and procedures',
+      'Manage recruitment processes',
+      'Implement diversity initiatives',
+      'Handle employee relations'
+    ],
     experience: '5+ years',
     faithAlignment: {
       halalIncome: true,
@@ -238,6 +286,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['Islamic Finance', 'Financial Analysis', 'Shariah Compliance', 'Excel'],
+    responsibilities: [
+      'Analyze investment opportunities',
+      'Ensure Shariah compliance',
+      'Prepare financial reports',
+      'Monitor market trends'
+    ],
     experience: '3+ years',
     faithAlignment: {
       halalIncome: true,
@@ -264,6 +318,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['JavaScript', 'React', 'Node.js', 'API Development'],
+    responsibilities: [
+      'Develop web applications',
+      'Build and maintain APIs',
+      'Implement security measures',
+      'Collaborate with team members'
+    ],
     experience: '2+ years',
     faithAlignment: {
       halalIncome: true,
@@ -290,6 +350,12 @@ export const jobs: Job[] = [
       currency: 'EUR'
     },
     requirements: ['Marketing', 'European Markets', 'Digital Marketing', 'Analytics'],
+    responsibilities: [
+      'Develop marketing campaigns',
+      'Analyze market data',
+      'Manage social media presence',
+      'Coordinate with European partners'
+    ],
     experience: '3+ years',
     faithAlignment: {
       halalIncome: true,

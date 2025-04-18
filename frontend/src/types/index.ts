@@ -13,6 +13,7 @@ export interface Job {
   };
   requirements: string[];
   experience: string;
+  responsibilities: string[];
   faithAlignment: {
     halalIncome: boolean;
     prayerFriendly: boolean;
@@ -37,6 +38,8 @@ export interface Talent {
   isVerified: boolean;
   isCommunityMember: boolean;
   bio?: string;
+  languages?: string[];
+  education?: string;
   experienceDetails?: {
     title: string;
     company: string;

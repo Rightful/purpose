@@ -22,18 +22,10 @@
           class="p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
         >
           <option value="">All Locations</option>
-          <option value="Amsterdam">Amsterdam</option>
-          <option value="Rotterdam">Rotterdam</option>
-          <option value="Utrecht">Utrecht</option>
-          <option value="The Hague">The Hague</option>
-        </select>
-        <select
-          v-model="experienceFilter"
-          class="p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
-        >
-          <option value="">All Experience Levels</option>
-          <option value="3">3+ years</option>
-          <option value="5">5+ years</option>
+          <option value="Amsterdam, NL">Amsterdam</option>
+          <option value="Rotterdam, NL">Rotterdam</option>
+          <option value="Utrecht, NL">Utrecht</option>
+          <option value="The Hague, NL">The Hague</option>
         </select>
       </div>
     </div>
@@ -51,16 +43,22 @@
           <p class="text-gray-500 mb-4">{{ job.location }}</p>
           
           <div class="mb-4">
-            <span class="bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full">{{ job.type }}</span>
+            <span 
+              :class="[
+                'text-sm px-3 py-1 rounded-full inline-flex items-center gap-1',
+                job.type.toLowerCase() === 'full-time' 
+                  ? 'bg-primary-600 text-white border border-primary-700' 
+                  : 'bg-primary-50 text-primary-600 border border-primary-100'
+              ]"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ job.type }}
+            </span>
           </div>
           
           <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
-          
-          <div class="mb-4">
-            <p class="text-gray-600">
-              Salary: {{ formatSalary(job.salary) }}
-            </p>
-          </div>
           
           <div class="mb-4">
             <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
@@ -90,9 +88,8 @@
               </span>
             </div>
           </div>
-          
-          <div class="mb-4">
-            <h3 class="font-semibold mb-2 text-primary-900">Faith Alignment:</h3>
+
+          <div class="border-t border-gray-200 pt-4 mt-4">
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center">
                 <span
@@ -106,7 +103,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm">Halal Income</span>
+                <span class="text-sm text-gray-600">Halal Income</span>
               </div>
               <div class="flex items-center">
                 <span
@@ -120,7 +117,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm">Prayer Friendly</span>
+                <span class="text-sm text-gray-600">Prayer Friendly</span>
               </div>
               <div class="flex items-center">
                 <span
@@ -134,11 +131,11 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm">Flexible Hours</span>
+                <span class="text-sm text-gray-600">Flexible Hours</span>
               </div>
               <div class="flex items-center">
                 <span
-                  :class="job.faithAlignment.modestDressCode ? 'text-green-500' : 'text-gray-400'"
+                  :class="job.faithAlignment.modestDressCode ? 'text-green-500' : 'text-red-500'"
                   class="mr-2"
                 >
                   <svg v-if="job.faithAlignment.modestDressCode" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -148,7 +145,7 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                   </svg>
                 </span>
-                <span class="text-sm">Modest Dress Code</span>
+                <span class="text-sm text-gray-600">Modest Dress Code</span>
               </div>
             </div>
           </div>
@@ -194,7 +191,6 @@ const router = useRouter()
 const loading = ref(false)
 const searchQuery = ref('')
 const locationFilter = ref('')
-const experienceFilter = ref('')
 const expandedJobs = ref<Set<string>>(new Set())
 
 const filteredJobs = computed(() => {
@@ -210,10 +206,7 @@ const filteredJobs = computed(() => {
     const matchesLocation = locationFilter.value === '' || 
       job.location === locationFilter.value
     
-    const matchesExperience = experienceFilter.value === '' || 
-      job.experience >= parseInt(experienceFilter.value)
-    
-    return matchesSearch && matchesLocation && matchesExperience
+    return matchesSearch && matchesLocation
   })
 })
 

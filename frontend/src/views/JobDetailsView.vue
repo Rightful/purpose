@@ -40,7 +40,7 @@
               </span>
             </div>
           </div>
-          <div class="bg-primary-100 text-primary-800 px-4 py-2 rounded-lg">
+          <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-medium">
             {{ formatSalary(job.salary) }}
           </div>
         </div>
@@ -108,6 +108,16 @@
           <ul class="list-disc list-inside space-y-2 text-gray-700">
             <li v-for="requirement in job.requirements" :key="requirement">
               {{ requirement }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Responsibilities -->
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold text-primary-900 mb-4">Responsibilities</h2>
+          <ul class="list-disc list-inside space-y-2 text-gray-700">
+            <li v-for="responsibility in job.responsibilities" :key="responsibility">
+              {{ responsibility }}
             </li>
           </ul>
         </div>

@@ -5,7 +5,7 @@
 
     <!-- Search and Filters -->
     <div class="bg-white p-6 rounded-lg shadow-sm mb-8 border border-primary-100">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-primary-900 mb-2">Search</label>
           <div class="relative">
@@ -30,17 +30,6 @@
             <option v-for="location in uniqueLocations" :key="location" :value="location">
               {{ location }}
             </option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-primary-900 mb-2">Faith Preferences</label>
-          <select
-            v-model="faithFilter"
-            class="block w-full rounded-lg border-2 border-primary-200 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors py-3 px-4"
-          >
-            <option value="">All Preferences</option>
-            <option value="fixed">Fixed Prayer Times</option>
-            <option value="flexible">Flexible Prayer Times</option>
           </select>
         </div>
       </div>
@@ -206,29 +195,24 @@ import type { Talent } from '@/types'
 const router = useRouter()
 const searchQuery = ref('')
 const locationFilter = ref('')
-const faithFilter = ref('')
 
+// Get unique locations
 const uniqueLocations = computed(() => {
-  return [...new Set((talents as Talent[]).map(talent => talent.location))]
+  const locations = new Set(talents.map(talent => talent.location))
+  return Array.from(locations)
 })
 
+// Filter talents based on search query and location
 const filteredTalents = computed(() => {
-  return (talents as Talent[]).filter(talent => {
-    const matchesSearch = searchQuery.value
-      ? talent.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        talent.skills.some(skill => skill.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
-        talent.location.toLowerCase().includes(searchQuery.value.toLowerCase())
-      : true
-
-    const matchesLocation = locationFilter.value
-      ? talent.location === locationFilter.value
-      : true
-
-    const matchesFaith = faithFilter.value
-      ? talent.faithAlignment.prayerTimePreference === faithFilter.value
-      : true
-
-    return matchesSearch && matchesLocation && matchesFaith
+  return talents.filter(talent => {
+    const matchesSearch = talent.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      talent.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      talent.skills.some(skill => skill.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      talent.location.toLowerCase().includes(searchQuery.value.toLowerCase())
+    
+    const matchesLocation = !locationFilter.value || talent.location === locationFilter.value
+    
+    return matchesSearch && matchesLocation
   })
 })
 

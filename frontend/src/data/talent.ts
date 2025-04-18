@@ -126,5 +126,89 @@ export const talents: Talent[] = [
     bio: 'Creative content writer specializing in engaging digital content and SEO optimization. Experienced in creating compelling narratives for various industries.',
     languages: ['English', 'Urdu', 'Dutch'],
     education: 'BA Journalism, University of Groningen'
+  },
+  {
+    id: '7',
+    name: 'Mehmet Yilmaz',
+    title: 'DevOps Engineer',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    location: 'Utrecht, Netherlands',
+    skills: ['Docker', 'Kubernetes', 'CI/CD', 'AWS', 'Terraform'],
+    experience: '5 years',
+    availability: 'Full-time',
+    isVerified: true,
+    isCommunityMember: true,
+    faithAlignment: {
+      prayerTimePreference: 'fixed',
+      hijabPolicy: 'not_applicable',
+      genderPreference: 'none',
+      dietaryRequirements: 'halal'
+    },
+    bio: 'DevOps engineer with expertise in cloud infrastructure and automation. Passionate about building scalable and reliable systems.',
+    languages: ['English', 'Turkish', 'Dutch'],
+    education: 'MSc Computer Science, Utrecht University'
+  },
+  {
+    id: '8',
+    name: 'Sofia Martinez',
+    title: 'Frontend Developer',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    location: 'Rotterdam, Netherlands',
+    skills: ['Vue.js', 'React', 'TypeScript', 'CSS', 'Web Accessibility'],
+    experience: '4 years',
+    availability: 'Full-time',
+    isVerified: true,
+    isCommunityMember: false,
+    faithAlignment: {
+      prayerTimePreference: 'flexible',
+      hijabPolicy: 'not_applicable',
+      genderPreference: 'female',
+      dietaryRequirements: 'halal'
+    },
+    bio: 'Frontend developer specializing in creating responsive and accessible web applications. Strong focus on user experience and performance optimization.',
+    languages: ['English', 'Spanish', 'Dutch'],
+    education: 'BSc Computer Science, Erasmus University'
+  },
+  {
+    id: '9',
+    name: 'David Chen',
+    title: 'Backend Developer',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    location: 'Amsterdam, Netherlands',
+    skills: ['Java', 'Spring Boot', 'Microservices', 'PostgreSQL', 'Redis'],
+    experience: '6 years',
+    availability: 'Full-time',
+    isVerified: true,
+    isCommunityMember: true,
+    faithAlignment: {
+      prayerTimePreference: 'fixed',
+      hijabPolicy: 'not_applicable',
+      genderPreference: 'none',
+      dietaryRequirements: 'halal'
+    },
+    bio: 'Backend developer with expertise in building robust and scalable microservices architectures. Experienced in high-performance systems.',
+    languages: ['English', 'Mandarin', 'Dutch'],
+    education: 'MSc Software Engineering, University of Amsterdam'
+  },
+  {
+    id: '10',
+    name: 'Maria Santos',
+    title: 'QA Engineer',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    location: 'Eindhoven, Netherlands',
+    skills: ['Test Automation', 'Selenium', 'JUnit', 'Cypress', 'Agile Testing'],
+    experience: '5 years',
+    availability: 'Full-time',
+    isVerified: true,
+    isCommunityMember: false,
+    faithAlignment: {
+      prayerTimePreference: 'fixed',
+      hijabPolicy: 'not_applicable',
+      genderPreference: 'female',
+      dietaryRequirements: 'halal'
+    },
+    bio: 'QA engineer specializing in test automation and quality assurance. Strong focus on continuous integration and delivery.',
+    languages: ['English', 'Portuguese', 'Dutch'],
+    education: 'BSc Computer Science, TU Eindhoven'
   }
 ] 
