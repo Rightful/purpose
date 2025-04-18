@@ -2,7 +2,7 @@ export interface Job {
   id: string;
   title: string;
   company: string;
-  companyId?: string;
+  companyId: string;
   location: string;
   type: string;
   description: string;
@@ -12,18 +12,17 @@ export interface Job {
     currency: string;
   };
   requirements: string[];
-  experience: number;
+  experience: string;
   faithAlignment: {
     halalIncome: boolean;
     prayerFriendly: boolean;
-    flexibleHours?: boolean;
-    modestDressCode?: boolean;
-    genderSegregation?: boolean;
+    flexibleHours: boolean;
+    modestDressCode: boolean;
   };
-  postedDate?: string;
-  applicationDeadline?: string;
-  contactEmail?: string;
-  website?: string;
+  postedDate: string;
+  applicationDeadline: string;
+  contactEmail: string;
+  website: string;
 }
 
 export interface Talent {
@@ -41,15 +40,8 @@ export interface Talent {
   }[];
   certifications: string[];
   languages: string[];
-  status: string;
-  profileImage?: string;
-  portfolioUrl?: string;
-  linkedinUrl?: string;
-  githubUrl?: string;
-  availability?: string;
-  preferredLocations?: string[];
-  preferredJobTypes?: string[];
-  salaryExpectation?: {
+  availability: boolean;
+  salaryExpectation: {
     min: number;
     max: number;
     currency: string;
@@ -59,11 +51,11 @@ export interface Talent {
 export interface User {
   id: string;
   email: string;
-  password: string; // In a real app, this would be hashed
+  password: string;
   name: string;
-  role: 'talent' | 'company' | 'admin';
+  role: 'talent' | 'company';
   createdAt: string;
-  lastLogin?: string;
+  updatedAt: string;
 }
 
 export interface Company {
@@ -71,24 +63,15 @@ export interface Company {
   name: string;
   description: string;
   industry: string;
-  size: string;
   location: string;
+  size: string;
   website: string;
-  logo?: string;
-  foundedYear?: number;
   faithAlignment: {
     halalIncome: boolean;
     prayerFriendly: boolean;
-    flexibleHours?: boolean;
+    flexibleHours: boolean;
     modestDressCode?: boolean;
-    genderSegregation?: boolean;
   };
   contactEmail: string;
-  contactPhone?: string;
-  socialMedia?: {
-    linkedin?: string;
-    twitter?: string;
-    facebook?: string;
-    instagram?: string;
-  };
+  logo?: string;
 } 

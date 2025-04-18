@@ -2,6 +2,7 @@ export interface Job {
   id: string;
   title: string;
   company: string;
+  companyId: string;
   location: string;
   type: string;
   description: string;
@@ -11,11 +12,17 @@ export interface Job {
     currency: string;
   };
   requirements: string[];
-  experience: number;
+  experience: string;
   faithAlignment: {
     halalIncome: boolean;
     prayerFriendly: boolean;
+    flexibleHours: boolean;
+    modestDressCode: boolean;
   };
+  postedDate: string;
+  applicationDeadline: string;
+  contactEmail: string;
+  website: string;
 }
 
 export interface Talent {
@@ -37,11 +44,9 @@ export interface Talent {
 }
 
 export interface MatchDetails {
-  skillMatchPercentage: number;
-  locationMatch: boolean;
-  experienceMatch: boolean;
-  matchingSkills: string[];
-  matchScore: number;
+  score: number;
+  matchedSkills: string[];
+  missingSkills: string[];
 }
 
 export interface JobMatch extends Job {

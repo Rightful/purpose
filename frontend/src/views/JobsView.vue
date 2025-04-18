@@ -43,73 +43,119 @@
       <div
         v-for="job in filteredJobs"
         :key="job.id"
-        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-primary-100"
+        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-primary-100 flex flex-col h-full"
       >
-        <h2 class="text-xl font-semibold mb-2 text-primary-900">{{ job.title }}</h2>
-        <p class="text-gray-600 mb-2">{{ job.company }}</p>
-        <p class="text-gray-500 mb-4">{{ job.location }}</p>
-        
-        <div class="mb-4">
-          <span class="bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full">{{ job.type }}</span>
-        </div>
-        
-        <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
-        
-        <div class="mb-4">
-          <p class="text-gray-600">
-            Salary: {{ formatSalary(job.salary) }}
-          </p>
-        </div>
-        
-        <div class="mb-4">
-          <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="skill in job.requirements"
-              :key="skill"
-              class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
-            >
-              {{ skill }}
-            </span>
+        <div class="flex-grow">
+          <h2 class="text-xl font-semibold mb-2 text-primary-900">{{ job.title }}</h2>
+          <p class="text-gray-600 mb-2">{{ job.company }}</p>
+          <p class="text-gray-500 mb-4">{{ job.location }}</p>
+          
+          <div class="mb-4">
+            <span class="bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full">{{ job.type }}</span>
           </div>
-        </div>
-        
-        <div class="mb-4">
-          <h3 class="font-semibold mb-2 text-primary-900">Faith Alignment:</h3>
-          <div class="flex gap-4">
-            <div class="flex items-center">
+          
+          <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
+          
+          <div class="mb-4">
+            <p class="text-gray-600">
+              Salary: {{ formatSalary(job.salary) }}
+            </p>
+          </div>
+          
+          <div class="mb-4">
+            <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
+            <div class="flex flex-wrap gap-2">
               <span
-                :class="job.faithAlignment.halalIncome ? 'text-green-500' : 'text-red-500'"
-                class="mr-2"
+                v-for="skill in job.requirements.slice(0, 3)"
+                :key="skill"
+                class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
               >
-                <svg v-if="job.faithAlignment.halalIncome" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
+                {{ skill }}
               </span>
-              <span>Halal Income</span>
+              <span
+                v-if="job.requirements.length > 3"
+                class="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200"
+                @click="toggleShowAllRequirements(job.id)"
+              >
+                {{ isShowingAllRequirements(job.id) ? 'Show Less' : `+${job.requirements.length - 3} more` }}
+              </span>
             </div>
-            <div class="flex items-center">
+            <div v-if="isShowingAllRequirements(job.id)" class="mt-2 flex flex-wrap gap-2">
               <span
-                :class="job.faithAlignment.prayerFriendly ? 'text-green-500' : 'text-red-500'"
-                class="mr-2"
+                v-for="skill in job.requirements.slice(3)"
+                :key="skill"
+                class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
               >
-                <svg v-if="job.faithAlignment.prayerFriendly" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
+                {{ skill }}
               </span>
-              <span>Prayer Friendly</span>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h3 class="font-semibold mb-2 text-primary-900">Faith Alignment:</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex items-center">
+                <span
+                  :class="job.faithAlignment.halalIncome ? 'text-green-500' : 'text-red-500'"
+                  class="mr-2"
+                >
+                  <svg v-if="job.faithAlignment.halalIncome" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <span class="text-sm">Halal Income</span>
+              </div>
+              <div class="flex items-center">
+                <span
+                  :class="job.faithAlignment.prayerFriendly ? 'text-green-500' : 'text-red-500'"
+                  class="mr-2"
+                >
+                  <svg v-if="job.faithAlignment.prayerFriendly" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <span class="text-sm">Prayer Friendly</span>
+              </div>
+              <div class="flex items-center">
+                <span
+                  :class="job.faithAlignment.flexibleHours ? 'text-green-500' : 'text-red-500'"
+                  class="mr-2"
+                >
+                  <svg v-if="job.faithAlignment.flexibleHours" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <span class="text-sm">Flexible Hours</span>
+              </div>
+              <div class="flex items-center">
+                <span
+                  :class="job.faithAlignment.modestDressCode ? 'text-green-500' : 'text-gray-400'"
+                  class="mr-2"
+                >
+                  <svg v-if="job.faithAlignment.modestDressCode" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <span class="text-sm">Modest Dress Code</span>
+              </div>
             </div>
           </div>
         </div>
         
         <button
-          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 mt-4"
           @click="viewJobDetails(job.id)"
         >
           <span>View Details</span>
@@ -149,6 +195,7 @@ const loading = ref(false)
 const searchQuery = ref('')
 const locationFilter = ref('')
 const experienceFilter = ref('')
+const expandedJobs = ref<Set<string>>(new Set())
 
 const filteredJobs = computed(() => {
   return jobs.filter(job => {
@@ -176,6 +223,18 @@ const formatSalary = (salary: Job['salary']) => {
 
 const handleSearch = () => {
   // Debounce could be added here if needed
+}
+
+const isShowingAllRequirements = (jobId: string) => {
+  return expandedJobs.value.has(jobId)
+}
+
+const toggleShowAllRequirements = (jobId: string) => {
+  if (expandedJobs.value.has(jobId)) {
+    expandedJobs.value.delete(jobId)
+  } else {
+    expandedJobs.value.add(jobId)
+  }
 }
 
 const viewJobDetails = (jobId: string) => {
