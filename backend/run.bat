@@ -1,5 +1,5 @@
 @echo off
-echo Starting Ummah Talent Backend...
+echo Starting Purpose Backend...
 
 REM Check if node_modules exists
 if not exist node_modules (

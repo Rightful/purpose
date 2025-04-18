@@ -1,5 +1,5 @@
 @echo off
-echo Starting Ummah Talent Backend using Git Bash...
+echo Starting Purpose Backend using Git Bash...
 
 REM Check if Git Bash is installed
 where bash >nul 2>nul

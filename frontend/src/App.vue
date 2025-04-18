@@ -5,7 +5,7 @@
         <div class="flex justify-between h-16">
           <div class="flex">
             <router-link to="/" class="flex-shrink-0 flex items-center">
-              <span class="text-xl font-bold text-gray-900">Purpose</span>
+              <img src="@/assets/purpose_logo_light-background.png" alt="Purpose" class="h-8 w-auto" />
             </router-link>
             <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
               <router-link

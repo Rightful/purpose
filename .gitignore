@@ -32,3 +32,5 @@ coverage
 
 # MongoDB data
 backend/data/db/ 
+# Local Netlify folder
+.netlify

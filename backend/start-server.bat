@@ -1,5 +1,5 @@
 @echo off
-echo Starting Ummah Talent Backend Server...
+echo Starting Purpose Backend Server...
 
 REM Check if port 3000 is in use
 netstat -ano | findstr :3000 > nul

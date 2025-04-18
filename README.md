@@ -90,24 +90,74 @@ The frontend will be available at: http://localhost:5173
 
 ## Project Structure
 
+- `frontend/`: Vue.js frontend application
+- `backend/`: Express.js backend API
+
+## Local Development
+
+### Backend
+
+```bash
+cd backend
+npm install
+npm run dev
 ```
-ummah-talent/
-├── frontend/           # Vue.js frontend
-│   ├── src/
-│   │   ├── assets/    # Static assets
-│   │   ├── components/# Vue components
-│   │   ├── views/     # Page components
-│   │   ├── router/    # Vue Router config
-│   │   └── stores/    # Pinia stores
-│   └── public/        # Public assets
-└── backend/           # Node.js backend
-    ├── src/
-    │   ├── controllers/
-    │   ├── models/
-    │   ├── routes/
-    │   └── services/
-    └── config/
+
+The backend will run on http://localhost:3001
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
+
+The frontend will run on http://localhost:5173
+
+## Deployment
+
+### Backend Deployment
+
+The backend can be deployed to various platforms:
+
+#### Heroku
+
+1. Create a new Heroku app
+2. Connect your GitHub repository
+3. Set the following environment variables:
+   - `NODE_ENV=production`
+4. Deploy the app
+
+#### Railway
+
+1. Create a new Railway project
+2. Connect your GitHub repository
+3. Set the following environment variables:
+   - `NODE_ENV=production`
+4. Deploy the app
+
+### Frontend Deployment (Netlify)
+
+1. Create a new Netlify site
+2. Connect your GitHub repository
+3. Set the build settings:
+   - Build command: `cd frontend && npm install && npm run build`
+   - Publish directory: `frontend/dist`
+4. Set the following environment variables:
+   - `VITE_API_URL=https://your-backend-url.com/api`
+5. Deploy the site
+
+## Environment Variables
+
+### Backend
+
+- `PORT`: The port the server will run on (default: 3001)
+- `NODE_ENV`: The environment (development/production)
+
+### Frontend
+
+- `VITE_API_URL`: The URL of the backend API
 
 ## Contributing
 
