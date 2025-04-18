@@ -8,10 +8,14 @@ const port = process.env.PORT || 3001;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://ummah-talent.netlify.app',
-    'https://*.netlify.app'
+    'https://unrivaled-crepe-69eb3f.netlify.app',
+    'https://purpose-production.up.railway.app',
+    'https://*.netlify.app',
+    'https://*.railway.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
