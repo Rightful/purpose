@@ -1,185 +1,184 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Islamic Jobs in the Netherlands</h1>
+    <h1 class="text-3xl font-bold mb-8 text-primary-900">Faith-Aligned Jobs</h1>
     
-    <!-- Search Bar -->
+    <!-- Search and Filters -->
     <div class="mb-8">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="Search jobs by title, company, location, or skills..."
-        class="w-full p-4 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
-        @input="handleSearch"
-      />
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1 relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search jobs by title, company, location, or skills..."
+            class="w-full p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
+            @input="handleSearch"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <select
+          v-model="locationFilter"
+          class="p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
+        >
+          <option value="">All Locations</option>
+          <option value="Amsterdam">Amsterdam</option>
+          <option value="Rotterdam">Rotterdam</option>
+          <option value="Utrecht">Utrecht</option>
+          <option value="The Hague">The Hague</option>
+        </select>
+        <select
+          v-model="experienceFilter"
+          class="p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
+        >
+          <option value="">All Experience Levels</option>
+          <option value="3">3+ years</option>
+          <option value="5">5+ years</option>
+        </select>
+      </div>
     </div>
 
-    <!-- Filters -->
-    <div class="mb-8 flex flex-wrap gap-4">
-      <select
-        v-model="locationFilter"
-        class="p-2 border rounded-lg"
-      >
-        <option value="">All Locations</option>
-        <option value="Amsterdam">Amsterdam</option>
-        <option value="Rotterdam">Rotterdam</option>
-        <option value="Utrecht">Utrecht</option>
-        <option value="The Hague">The Hague</option>
-      </select>
-
-      <select
-        v-model="experienceFilter"
-        class="p-2 border rounded-lg"
-      >
-        <option value="">All Experience Levels</option>
-        <option value="2">2+ years</option>
-        <option value="3">3+ years</option>
-        <option value="4">4+ years</option>
-        <option value="5">5+ years</option>
-      </select>
-    </div>
-
-    <!-- Jobs List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Job Listings -->
+    <div v-if="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
         v-for="job in filteredJobs"
         :key="job.id"
-        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-primary-100"
       >
-        <h2 class="text-xl font-semibold mb-2">{{ job.title }}</h2>
-        <h3 class="text-lg text-gray-600 mb-2">{{ job.company }}</h3>
-        <div class="flex items-center text-gray-500 mb-4">
-          <span class="mr-4">{{ job.location }}</span>
-          <span>{{ job.type }}</span>
-        </div>
-        <p class="text-gray-700 mb-4">{{ job.description }}</p>
+        <h2 class="text-xl font-semibold mb-2 text-primary-900">{{ job.title }}</h2>
+        <p class="text-gray-600 mb-2">{{ job.company }}</p>
+        <p class="text-gray-500 mb-4">{{ job.location }}</p>
+        
         <div class="mb-4">
-          <h4 class="font-semibold mb-2">Salary Range:</h4>
-          <p class="text-green-600">
-            {{ job.salary.min.toLocaleString() }} - {{ job.salary.max.toLocaleString() }} {{ job.salary.currency }}
+          <span class="bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full">{{ job.type }}</span>
+        </div>
+        
+        <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
+        
+        <div class="mb-4">
+          <p class="text-gray-600">
+            Salary: {{ formatSalary(job.salary) }}
           </p>
         </div>
+        
         <div class="mb-4">
-          <h4 class="font-semibold mb-2">Required Skills:</h4>
+          <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
           <div class="flex flex-wrap gap-2">
             <span
               v-for="skill in job.requirements"
               :key="skill"
-              class="bg-gray-100 px-3 py-1 rounded-full text-sm"
+              class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
             >
               {{ skill }}
             </span>
           </div>
         </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span
-              v-if="job.faithAlignment.halalIncome"
-              class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm"
-            >
-              Halal Income
-            </span>
-            <span
-              v-if="job.faithAlignment.prayerFriendly"
-              class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm"
-            >
-              Prayer Friendly
-            </span>
+        
+        <div class="mb-4">
+          <h3 class="font-semibold mb-2 text-primary-900">Faith Alignment:</h3>
+          <div class="flex gap-4">
+            <div class="flex items-center">
+              <span
+                :class="job.faithAlignment.halalIncome ? 'text-green-500' : 'text-red-500'"
+                class="mr-2"
+              >
+                <svg v-if="job.faithAlignment.halalIncome" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+              </span>
+              <span>Halal Income</span>
+            </div>
+            <div class="flex items-center">
+              <span
+                :class="job.faithAlignment.prayerFriendly ? 'text-green-500' : 'text-red-500'"
+                class="mr-2"
+              >
+                <svg v-if="job.faithAlignment.prayerFriendly" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+              </span>
+              <span>Prayer Friendly</span>
+            </div>
           </div>
-          <button
-            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-            @click="viewJobDetails(job)"
-          >
-            View Details
-          </button>
         </div>
+        
+        <button
+          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+          @click="viewJobDetails(job.id)"
+        >
+          <span>View Details</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
       </div>
     </div>
 
     <!-- Loading State -->
-    <div
-      v-if="loading"
-      class="flex justify-center items-center py-8"
-    >
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+    <div v-else class="flex justify-center items-center h-64">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
     </div>
 
     <!-- No Results -->
     <div
       v-if="!loading && filteredJobs.length === 0"
-      class="text-center py-8 text-gray-500"
+      class="text-center py-12"
     >
-      No jobs found matching your criteria.
-    </div>
-
-    <!-- Error Message -->
-    <div
-      v-if="error"
-      class="text-center py-8 text-red-500"
-    >
-      {{ error }}
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-primary-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-gray-600 text-lg">No jobs found matching your criteria.</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import api, { type Job } from '@/services/api';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { jobs } from '@/data/jobs'
+import type { Job } from '@/types'
 
-const jobs = ref<Job[]>([]);
-const loading = ref(true);
-const error = ref<string | null>(null);
-const searchQuery = ref('');
-const locationFilter = ref('');
-const experienceFilter = ref('');
+const router = useRouter()
+const loading = ref(false)
+const searchQuery = ref('')
+const locationFilter = ref('')
+const experienceFilter = ref('')
 
 const filteredJobs = computed(() => {
-  if (!Array.isArray(jobs.value)) {
-    return [];
-  }
-  
-  return jobs.value.filter(job => {
-    const matchesLocation = !locationFilter.value || job.location === locationFilter.value;
-    const matchesExperience = !experienceFilter.value || job.experience >= parseInt(experienceFilter.value);
-    return matchesLocation && matchesExperience;
-  });
-});
+  return jobs.filter(job => {
+    const matchesSearch = searchQuery.value === '' || 
+      job.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      job.company.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      job.requirements.some(skill => 
+        skill.toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+    
+    const matchesLocation = locationFilter.value === '' || 
+      job.location === locationFilter.value
+    
+    const matchesExperience = experienceFilter.value === '' || 
+      job.experience >= parseInt(experienceFilter.value)
+    
+    return matchesSearch && matchesLocation && matchesExperience
+  })
+})
 
-const handleSearch = async () => {
-  if (searchQuery.value.trim()) {
-    loading.value = true;
-    error.value = null;
-    try {
-      jobs.value = await api.searchJobs(searchQuery.value);
-    } catch (err) {
-      console.error('Error searching jobs:', err);
-      error.value = 'Failed to search jobs. Please try again.';
-      jobs.value = [];
-    }
-    loading.value = false;
-  } else {
-    loadJobs();
-  }
-};
+const formatSalary = (salary: Job['salary']) => {
+  return `${salary.currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`
+}
 
-const loadJobs = async () => {
-  loading.value = true;
-  error.value = null;
-  try {
-    jobs.value = await api.getJobs();
-  } catch (err) {
-    console.error('Error loading jobs:', err);
-    error.value = 'Failed to load jobs. Please try again later.';
-    jobs.value = [];
-  }
-  loading.value = false;
-};
+const handleSearch = () => {
+  // Debounce could be added here if needed
+}
 
-const viewJobDetails = (job: Job) => {
-  // Implement job details view
-  console.log('Viewing job:', job);
-};
-
-onMounted(() => {
-  loadJobs();
-});
+const viewJobDetails = (jobId: string) => {
+  router.push(`/jobs/${jobId}`)
+}
 </script> 
