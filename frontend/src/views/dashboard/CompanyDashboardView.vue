@@ -102,29 +102,28 @@
         </div>
         <div class="divide-y divide-gray-200">
           <div v-for="application in recentApplications" :key="application.id" class="p-6">
-            <div class="flex items-start space-x-4">
-              <img 
-                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(application.candidateName)}&background=6366F1&color=fff`"
-                :alt="application.candidateName"
-                class="h-12 w-12 rounded-full"
-              />
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h3 class="text-lg font-medium text-primary-900">{{ application.candidateName }}</h3>
-                    <p class="text-gray-600">{{ application.jobTitle }}</p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <img
+                  :src="application.candidateImage"
+                  :alt="application.candidateName"
+                  class="h-12 w-12 rounded-full object-cover ring-2 ring-primary-200"
+                />
+                <div>
+                  <h3 class="text-lg font-medium text-primary-900">{{ application.candidateName }}</h3>
+                  <p class="text-gray-600">{{ application.jobTitle }}</p>
+                  <div class="flex items-center mt-2">
+                    <span class="text-sm text-gray-500">Applied {{ application.appliedDate }}</span>
+                    <span class="mx-2 text-gray-300">•</span>
+                    <span :class="getStatusClass(application.status)" class="text-sm font-medium">
+                      {{ application.status }}
+                    </span>
                   </div>
-                  <span :class="getStatusClass(application.status)" class="px-3 py-1 rounded-full text-sm font-medium">
-                    {{ application.status }}
-                  </span>
-                </div>
-                <div class="mt-2 flex items-center space-x-4">
-                  <span class="text-sm text-gray-500">Applied {{ application.appliedDate }}</span>
-                  <button class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                    View Profile
-                  </button>
                 </div>
               </div>
+              <button class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                View Details
+              </button>
             </div>
           </div>
         </div>
@@ -163,6 +162,7 @@ const recentApplications = ref([
   {
     id: '1',
     candidateName: 'Ahmed Hassan',
+    candidateImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     jobTitle: 'Senior Software Engineer',
     status: 'Pending',
     appliedDate: '2 hours ago'
@@ -170,6 +170,7 @@ const recentApplications = ref([
   {
     id: '2',
     candidateName: 'Fatima Rahman',
+    candidateImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     jobTitle: 'UX/UI Designer',
     status: 'Shortlisted',
     appliedDate: '1 day ago'
@@ -179,15 +180,15 @@ const recentApplications = ref([
 const getStatusClass = (status: string) => {
   switch (status.toLowerCase()) {
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-amber-50 text-amber-700 rounded-full px-3 py-1'
     case 'shortlisted':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-teal-50 text-teal-700 rounded-full px-3 py-1'
     case 'rejected':
-      return 'bg-red-100 text-red-800'
+      return 'bg-rose-50 text-rose-700 rounded-full px-3 py-1'
     case 'hired':
-      return 'bg-green-100 text-green-800'
+      return 'bg-emerald-50 text-emerald-700 rounded-full px-3 py-1'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-gray-50 text-gray-700 rounded-full px-3 py-1'
   }
 }
 

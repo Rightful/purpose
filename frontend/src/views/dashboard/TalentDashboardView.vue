@@ -254,15 +254,22 @@
         <div class="divide-y divide-gray-200">
           <div v-for="application in applications" :key="application.id" class="p-6">
             <div class="flex items-center justify-between">
-              <div>
-                <h3 class="text-lg font-medium text-primary-900">{{ application.jobTitle }}</h3>
-                <p class="text-gray-600">{{ application.company }}</p>
-                <div class="flex items-center mt-2">
-                  <span class="text-sm text-gray-500">Applied {{ application.appliedDate }}</span>
-                  <span class="mx-2 text-gray-300">•</span>
-                  <span :class="getStatusClass(application.status)" class="text-sm font-medium">
-                    {{ application.status }}
-                  </span>
+              <div class="flex items-center space-x-4">
+                <img
+                  :src="application.companyLogo"
+                  :alt="application.company"
+                  class="h-12 w-12 rounded-full object-cover ring-2 ring-primary-200"
+                />
+                <div>
+                  <h3 class="text-lg font-medium text-primary-900">{{ application.jobTitle }}</h3>
+                  <p class="text-gray-600">{{ application.company }}</p>
+                  <div class="flex items-center mt-2">
+                    <span class="text-sm text-gray-500">Applied {{ application.appliedDate }}</span>
+                    <span class="mx-2 text-gray-300">•</span>
+                    <span :class="getStatusClass(application.status)" class="text-sm font-medium inline-flex items-center">
+                      {{ application.status }}
+                    </span>
+                  </div>
                 </div>
               </div>
               <button class="text-primary-600 hover:text-primary-700 text-sm font-medium">
@@ -295,30 +302,32 @@ const applications = ref([
     id: '1',
     jobTitle: 'Senior Software Engineer',
     company: 'TechCorp',
-    status: 'Under Review',
+    companyLogo: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    status: 'Pending',
     appliedDate: '2 days ago'
   },
   {
     id: '2',
-    jobTitle: 'Full Stack Developer',
-    company: 'StartupX',
-    status: 'Interview Scheduled',
+    jobTitle: 'UX/UI Designer',
+    company: 'DesignHub',
+    companyLogo: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    status: 'Shortlisted',
     appliedDate: '1 week ago'
   }
 ])
 
 const getStatusClass = (status: string) => {
   switch (status.toLowerCase()) {
-    case 'under review':
-      return 'text-yellow-600'
-    case 'interview scheduled':
-      return 'text-blue-600'
+    case 'pending':
+      return 'bg-amber-100 text-amber-800 rounded-full px-3 py-1'
+    case 'shortlisted':
+      return 'bg-teal-100 text-teal-800 rounded-full px-3 py-1'
     case 'rejected':
-      return 'text-red-600'
+      return 'bg-red-100 text-red-800 rounded-full px-3 py-1'
     case 'accepted':
-      return 'text-green-600'
+      return 'bg-green-100 text-green-800 rounded-full px-3 py-1'
     default:
-      return 'text-gray-600'
+      return 'bg-gray-100 text-gray-800 rounded-full px-3 py-1'
   }
 }
 
