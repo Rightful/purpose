@@ -13,41 +13,41 @@
       </button>
 
       <!-- Job Header -->
-      <div class="bg-white rounded-lg shadow-md p-8">
-        <div class="flex items-start space-x-6 mb-8">
-          <div class="flex-shrink-0">
+      <div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
+        <div class="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 mb-6 sm:mb-8">
+          <div class="flex-shrink-0 mx-auto sm:mx-0">
             <img
               :src="job.companyLogo"
               :alt="job.company"
-              class="h-24 w-24 rounded-full object-cover ring-2 ring-primary-200"
+              class="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover ring-2 ring-primary-200"
             />
           </div>
-          <div class="flex-1">
-            <h1 class="text-3xl font-bold text-primary-900 mb-2">{{ job.title }}</h1>
-            <p class="text-xl text-gray-600 mb-4">{{ job.company }}</p>
-            <div class="flex items-center space-x-4 text-gray-600">
-              <span class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="flex-1 text-center sm:text-left">
+            <h1 class="text-2xl sm:text-3xl font-bold text-primary-900 mb-2">{{ job.title }}</h1>
+            <p class="text-lg sm:text-xl text-gray-600 mb-4">{{ job.company }}</p>
+            <div class="flex flex-wrap justify-center sm:justify-start gap-2 text-gray-600">
+              <span class="flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 {{ job.location }}
               </span>
-              <span class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <span class="flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ job.experience }}
               </span>
               <span 
                 :class="[
-                  'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
+                  'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
                   job.type.toLowerCase() === 'full-time' 
                     ? 'bg-primary-600 text-white border border-primary-700' 
                     : 'bg-primary-50 text-primary-600 border border-primary-100'
                 ]"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ job.type }}
