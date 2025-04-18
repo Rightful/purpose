@@ -9,7 +9,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search jobs by title, company, location, or skills..."
+            :placeholder="isMobile ? 'Search jobs...' : 'Search jobs by title, company, location, or skills...'"
             class="w-full p-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors"
             @input="handleSearch"
           />
@@ -205,6 +205,13 @@ const loading = ref(false)
 const searchQuery = ref('')
 const locationFilter = ref('')
 const expandedJobs = ref<Set<string>>(new Set())
+
+const isMobile = ref(window.innerWidth < 640)
+
+// Add window resize listener
+window.addEventListener('resize', () => {
+  isMobile.value = window.innerWidth < 640
+})
 
 const filteredJobs = computed(() => {
   return jobs.filter(job => {

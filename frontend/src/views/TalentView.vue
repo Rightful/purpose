@@ -51,8 +51,8 @@
             />
           </div>
           <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-xl font-semibold text-primary-900 truncate">{{ talent.name }}</h3>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xl font-semibold text-primary-900">{{ talent.name }}</h3>
               <span 
                 :class="[
                   'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
@@ -67,27 +67,22 @@
                 {{ talent.availability }}
               </span>
             </div>
-            <p class="text-base text-gray-600 mb-3">{{ talent.title }}</p>
-            <div class="flex items-center space-x-4 mb-4 text-sm text-gray-600">
-              <span class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                {{ talent.location }}
-              </span>
-              <span class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {{ talent.experience }}
-              </span>
+            <p class="text-base text-gray-600 mb-4">{{ talent.title }}</p>
+            <div class="flex items-center space-x-8 mb-4">
+              <div class="flex items-center min-w-[120px]">
+                <MapPinIcon class="h-4 w-4 text-gray-500 flex-shrink-0 mr-2" />
+                <span class="text-sm text-gray-600 truncate">{{ talent.location }}</span>
+              </div>
+              <div class="flex items-center min-w-[100px]">
+                <BriefcaseIcon class="h-4 w-4 text-gray-500 flex-shrink-0 mr-2" />
+                <span class="text-sm text-gray-600">{{ talent.experience }}</span>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Skills -->
-        <div class="mb-3">
+        <div class="mb-4">
           <div class="flex flex-wrap gap-2">
             <span
               v-for="skill in talent.skills"
@@ -191,6 +186,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { talents } from '@/data/talent'
 import type { Talent } from '@/types'
+import { MapPinIcon, BriefcaseIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
 const searchQuery = ref('')
