@@ -38,58 +38,71 @@
         class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border border-primary-100 flex flex-col h-full"
       >
         <div class="flex-grow">
-          <h2 class="text-xl font-semibold mb-2 text-primary-900">{{ job.title }}</h2>
-          <p class="text-gray-600 mb-2">{{ job.company }}</p>
-          <p class="text-gray-500 mb-4">{{ job.location }}</p>
-          
-          <div class="mb-4">
-            <span 
-              :class="[
-                'text-sm px-3 py-1 rounded-full inline-flex items-center gap-1',
-                job.type.toLowerCase() === 'full-time' 
-                  ? 'bg-primary-600 text-white border border-primary-700' 
-                  : 'bg-primary-50 text-primary-600 border border-primary-100'
-              ]"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {{ job.type }}
-            </span>
-          </div>
-          
-          <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
-          
-          <div class="mb-4">
-            <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
-            <div class="flex flex-wrap gap-2">
-              <span
-                v-for="skill in job.requirements.slice(0, 3)"
-                :key="skill"
-                class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
-              >
-                {{ skill }}
-              </span>
-              <span
-                v-if="job.requirements.length > 3"
-                class="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200"
-                @click="toggleShowAllRequirements(job.id)"
-              >
-                {{ isShowingAllRequirements(job.id) ? 'Show Less' : `+${job.requirements.length - 3} more` }}
-              </span>
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <img
+                :src="job.companyLogo"
+                :alt="job.company"
+                class="h-16 w-16 rounded-full object-cover ring-2 ring-primary-200"
+              />
             </div>
-            <div v-if="isShowingAllRequirements(job.id)" class="mt-2 flex flex-wrap gap-2">
-              <span
-                v-for="skill in job.requirements.slice(3)"
-                :key="skill"
-                class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
-              >
-                {{ skill }}
-              </span>
+            <div class="flex-1 min-w-0">
+              <h2 class="text-xl font-semibold mb-2 text-primary-900">{{ job.title }}</h2>
+              <p class="text-gray-600 mb-2">{{ job.company }}</p>
+              <p class="text-gray-500 mb-4">{{ job.location }}</p>
+              
+              <div class="mb-4">
+                <span 
+                  :class="[
+                    'text-sm px-3 py-1 rounded-full inline-flex items-center gap-1',
+                    job.type.toLowerCase() === 'full-time' 
+                      ? 'bg-primary-600 text-white border border-primary-700' 
+                      : 'bg-primary-50 text-primary-600 border border-primary-100'
+                  ]"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {{ job.type }}
+                </span>
+              </div>
+              
+              <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
+              
+              <div class="mb-4">
+                <h3 class="font-semibold mb-2 text-primary-900">Required Skills:</h3>
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    v-for="skill in job.requirements.slice(0, 3)"
+                    :key="skill"
+                    class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
+                  >
+                    {{ skill }}
+                  </span>
+                  <span
+                    v-if="job.requirements.length > 3"
+                    class="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200"
+                    @click="toggleShowAllRequirements(job.id)"
+                  >
+                    {{ isShowingAllRequirements(job.id) ? 'Show Less' : `+${job.requirements.length - 3} more` }}
+                  </span>
+                </div>
+                <div v-if="isShowingAllRequirements(job.id)" class="mt-2 flex flex-wrap gap-2">
+                  <span
+                    v-for="skill in job.requirements.slice(3)"
+                    :key="skill"
+                    class="bg-primary-50 text-primary-700 text-sm px-3 py-1 rounded-full"
+                  >
+                    {{ skill }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="border-t border-gray-200 pt-4 mt-4">
+        <div class="mt-auto">
+          <div class="border-t border-gray-200 pt-4">
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center">
                 <span
