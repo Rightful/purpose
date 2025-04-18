@@ -2,20 +2,22 @@
   <div class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8">
       <!-- Header -->
-      <div class="flex justify-between items-center mb-8">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
-          <h1 class="text-3xl font-bold text-primary-900">Company Dashboard</h1>
-          <p class="text-gray-600 mt-1">Manage your job postings and view applications</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-primary-900">Company Dashboard</h1>
+          <p class="text-gray-600 mt-1 text-sm sm:text-base">Manage your job postings and view applications</p>
         </div>
-        <button 
-          @click="createNewJob"
-          class="btn-primary flex items-center gap-2"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-          </svg>
-          Post New Job
-        </button>
+        <div class="flex justify-end">
+          <button 
+            @click="createNewJob"
+            class="bg-primary-600 text-white px-3 py-1.5 rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-1.5 text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Post New Job
+          </button>
+        </div>
       </div>
 
       <!-- Stats Overview -->
