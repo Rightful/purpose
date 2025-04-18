@@ -2,4 +2,11 @@
 nixPacks = { enable = true }
 builder = "nixpacks"
 buildCommand = "cd backend && npm install"
-startCommand = "cd backend && npm start" 
+startCommand = "cd backend && npm start"
+
+[deploy]
+startCommand = "cd backend && npm start"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10 
