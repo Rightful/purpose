@@ -29,22 +29,25 @@ export interface Talent {
   id: string;
   name: string;
   title: string;
+  image: string;
   location: string;
-  experience: number;
+  experience: string;
   skills: string[];
-  bio: string;
-  education: {
-    degree: string;
-    institution: string;
-    year: number;
+  availability: string;
+  isVerified: boolean;
+  isCommunityMember: boolean;
+  bio?: string;
+  experienceDetails?: {
+    title: string;
+    company: string;
+    duration: string;
+    description: string;
   }[];
-  certifications: string[];
-  languages: string[];
-  availability: boolean;
-  salaryExpectation: {
-    min: number;
-    max: number;
-    currency: string;
+  faithAlignment: {
+    prayerTimePreference: 'fixed' | 'flexible';
+    hijabPolicy: string;
+    genderPreference: 'male' | 'female' | 'none';
+    dietaryRequirements: 'halal' | 'none';
   };
 }
 
@@ -53,7 +56,24 @@ export interface User {
   email: string;
   password: string;
   name: string;
+  title?: string;
+  image?: string;
   role: 'talent' | 'company';
+  location?: string;
+  skills?: string[];
+  experience?: string;
+  availability?: string;
+  isVerified?: boolean;
+  isCommunityMember?: boolean;
+  languages?: string[];
+  faithAlignment?: {
+    prayerTimePreference: 'fixed' | 'flexible';
+    hijabPolicy: 'required' | 'not_applicable';
+    genderPreference: 'male' | 'female' | 'none';
+    dietaryRequirements: 'halal' | 'none';
+  };
+  bio?: string;
+  education?: string;
   createdAt: string;
   updatedAt: string;
 }

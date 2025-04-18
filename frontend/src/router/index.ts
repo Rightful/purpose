@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import HomeView from '../views/HomeView.vue'
+import TalentView from '@/views/TalentView.vue'
+import TalentProfileView from '@/views/TalentProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +26,12 @@ const router = createRouter({
       path: '/talent',
       name: 'talent',
       component: () => import('../views/TalentView.vue')
+    },
+    {
+      path: '/talent/:id',
+      name: 'talent-profile',
+      component: TalentProfileView,
+      props: true
     },
     {
       path: '/auth/signup',
