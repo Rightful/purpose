@@ -15,7 +15,6 @@
     "@types/pdfjs-dist": "^2.10.377",
     "@vueuse/core": "^10.7.2",
     "axios": "^1.6.7",
-    "file-type": "^20.4.1",
     "mammoth": "^1.9.0",
     "openai": "^4.95.1",
     "pdf-lib": "^1.17.1",

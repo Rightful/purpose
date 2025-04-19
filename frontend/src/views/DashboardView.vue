@@ -879,45 +879,69 @@ async function extractTxtText(blob: Blob): Promise<string> {
   return await blob.text()
 }
 
+const getFileType = (file: File): string => {
+  const extension = file.name.split('.').pop()?.toLowerCase();
+  switch (extension) {
+    case 'pdf':
+      return 'application/pdf';
+    case 'doc':
+    case 'docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    case 'txt':
+      return 'text/plain';
+    default:
+      return file.type;
+  }
+};
+
 const handleCVUpload = async (event: Event) => {
-  const input = event.target as HTMLInputElement
-  if (!input.files?.length) return
-  const file = input.files[0]
-  
-  chatMessages.value.push({ 
-    role: 'user', 
-    content: `I've uploaded my CV: ${file.name}` 
-  })
-  chatMessages.value.push({ 
-    role: 'assistant', 
-    content: "I'm taking a look at your resume" 
-  })
-  isLoading.value = true
-
-  try {
-    const mime = await detectMime(file)
-    const buffer = await file.arrayBuffer()
-    let text = ''
-
-    if (mime === 'application/pdf') {
-      text = await extractPdfText(buffer)
-    } else if (mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      text = await extractDocxText(buffer)
-    } else {
-      text = await extractTxtText(file)
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const fileType = getFileType(file);
+    
+    if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'].includes(fileType)) {
+      alert('Please upload a PDF, DOCX, or TXT file');
+      return;
     }
+    
+    chatMessages.value.push({ 
+      role: 'user', 
+      content: `I've uploaded my CV: ${file.name}` 
+    })
+    chatMessages.value.push({ 
+      role: 'assistant', 
+      content: "I'm taking a look at your resume" 
+    })
+    isLoading.value = true
 
-    if (!text.trim()) throw new Error('No text extracted')
+    try {
+      const mime = await detectMime(file)
+      const buffer = await file.arrayBuffer()
+      let text = ''
 
-    const maxChars = 800_000
-    if (text.length > maxChars) text = text.slice(0, maxChars) + '...'
+      if (mime === 'application/pdf') {
+        text = await extractPdfText(buffer)
+      } else if (mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        text = await extractDocxText(buffer)
+      } else {
+        text = await extractTxtText(file)
+      }
 
-    const cvPrompt = `Please analyze this CV and provide a clear, structured summary focusing on:
+      if (!text.trim()) throw new Error('No text extracted')
+
+      const maxChars = 800_000
+      if (text.length > maxChars) text = text.slice(0, maxChars) + '...'
+
+      const cvPrompt = `Please analyze this CV and provide a clear, structured summary focusing on:
+- Name (if available)
 - Job title
 - Contact information (location, email, phone if available)
 - Key skills (focus on 3-5 most relevant)
 
 Format your response like this:
+Hey [Name]! Thanks for uploading your CV!
+
 Job title
 You are a [Job Title].
 
@@ -934,41 +958,42 @@ Is this information correct? Please let me know if there's anything you'd like t
 ${text}
 --- CV END ---`
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
-      messages: [
-        systemMessage,
-        { role: 'user', content: cvPrompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 500
-    })
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4.1-mini',
+        messages: [
+          systemMessage,
+          { role: 'user', content: cvPrompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      })
 
-    const aiText = completion.choices[0].message?.content
-    if (!aiText) throw new Error('AI gave no response')
+      const aiText = completion.choices[0].message?.content
+      if (!aiText) throw new Error('AI gave no response')
 
-    chatMessages.value.push({ 
-      role: 'assistant', 
-      content: aiText
-    })
+      chatMessages.value.push({ 
+        role: 'assistant', 
+        content: aiText
+      })
 
-    // Add follow-up about workplace preferences
-    chatMessages.value.push({
-      role: 'assistant',
-      content: "Nice! Based on your impressive background, I'd love to understand more about your workplace preferences.\n\nCould you tell me about what kind of workplace environment do you prefer?"
-    })
+      // Add follow-up about workplace preferences
+      chatMessages.value.push({
+        role: 'assistant',
+        content: "Nice! Based on your impressive background, I'd love to understand more about your workplace preferences.\n\nCould you tell me about what kind of workplace environment do you prefer?"
+      })
 
-    if (cvUpload.value) {
-      cvUpload.value.value = ''
+      if (cvUpload.value) {
+        cvUpload.value.value = ''
+      }
+    } catch (error) {
+      console.error('Error analyzing CV:', error)
+      chatMessages.value.push({
+        role: 'assistant',
+        content: "I apologize, but there was an error analyzing your CV. Let's proceed with getting to know you through our conversation. What kind of workplace environment do you prefer?"
+      })
+    } finally {
+      isLoading.value = false
     }
-  } catch (error) {
-    console.error('Error analyzing CV:', error)
-    chatMessages.value.push({
-      role: 'assistant',
-      content: "I apologize, but there was an error analyzing your CV. Let's proceed with getting to know you through our conversation. What kind of workplace environment do you prefer?"
-    })
-  } finally {
-    isLoading.value = false
   }
 }
 
