@@ -535,7 +535,7 @@ import { ref, computed, watch, reactive } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import OpenAI from 'openai'
 import * as pdfjsLib from 'pdfjs-dist'
-import mammoth from 'mammoth'
+import * as mammoth from 'mammoth'
 import axios from 'axios'
 
 const authStore = useAuthStore()
@@ -865,8 +865,8 @@ async function extractPdfText(buffer: ArrayBuffer): Promise<string> {
 }
 
 async function extractDocxText(buffer: ArrayBuffer): Promise<string> {
-  const { value: html } = await mammoth.extractRawText({ arrayBuffer: buffer })
-  return html
+  const { value } = await mammoth.extractRawText({ arrayBuffer: buffer })
+  return value
 }
 
 async function extractTxtText(blob: Blob): Promise<string> {
