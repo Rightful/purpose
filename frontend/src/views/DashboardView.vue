@@ -57,37 +57,39 @@
           </div>
         </div>
 
-        <div v-if="!isConversationComplete" class="flex gap-2">
-          <input
-            v-model="userMessage"
-            type="text"
-            placeholder="Type your message..."
-            class="flex-1 p-2 border rounded-lg focus:ring-[#6941c6] focus:border-[#6941c6]"
-            :disabled="isLoading"
-            @keyup.enter="sendMessage"
-          />
-          <button
-            @click="sendMessage"
-            class="px-4 py-2 bg-[#6941c6] text-white rounded-lg hover:bg-[#6941c6]/90 disabled:opacity-50"
-            :disabled="isLoading || !userMessage.trim()"
-          >
-            Send
-          </button>
-          <input
-            type="file"
-            id="cv-upload"
-            ref="cvUpload"
-            class="hidden"
-            accept=".pdf,.doc,.docx"
-            @change="handleCVUpload"
-          />
-          <button
-            @click="() => cvUpload?.click()"
-            class="px-4 py-2 border border-[#6941c6] text-[#6941c6] rounded-lg hover:bg-[#6941c6]/10"
-            :disabled="isLoading"
-          >
-            Upload CV
-          </button>
+        <div v-if="!isConversationComplete" class="flex flex-col gap-4">
+          <div class="flex gap-2 w-full">
+            <input
+              v-model="userMessage"
+              type="text"
+              placeholder="Type your message..."
+              class="flex-1 p-3 border-2 border-[#6941c6]/20 rounded-lg focus:ring-2 focus:ring-[#6941c6] focus:border-[#6941c6] text-[#6941c6] placeholder-gray-400 bg-white w-full outline-none"
+              :disabled="isLoading"
+              @keyup.enter="sendMessage"
+            />
+            <button
+              @click="sendMessage"
+              class="px-4 py-2 bg-[#6941c6] text-white rounded-lg hover:bg-[#6941c6]/90 disabled:opacity-50 h-[46px]"
+              :disabled="isLoading || !userMessage.trim()"
+            >
+              Send
+            </button>
+            <input
+              type="file"
+              id="cv-upload"
+              ref="cvUpload"
+              class="hidden"
+              accept=".pdf,.doc,.docx"
+              @change="handleCVUpload"
+            />
+            <button
+              @click="() => cvUpload?.click()"
+              class="px-4 py-2 border-2 border-[#6941c6] text-[#6941c6] rounded-lg hover:bg-[#6941c6]/10 h-[46px]"
+              :disabled="isLoading"
+            >
+              Upload CV
+            </button>
+          </div>
         </div>
 
         <!-- Preferences Review Section -->
@@ -509,7 +511,13 @@
           </div>
         </div>
 
-        <div class="mt-6 flex justify-end">
+        <div class="mt-6 flex justify-between">
+          <button
+            @click="currentStep = 1"
+            class="px-4 py-2 border border-[#6941c6] text-[#6941c6] rounded-lg hover:bg-[#6941c6]/10"
+          >
+            Back to Preferences
+          </button>
           <button
             @click="savePreferences"
             class="px-4 py-2 bg-[#6941c6] text-white rounded-lg hover:bg-[#6941c6]/90"
@@ -529,6 +537,7 @@ import OpenAI from 'openai'
 import * as pdfjsLib from 'pdfjs-dist'
 import mammoth from 'mammoth'
 import { fileTypeFromBlob } from 'file-type'
+import axios from 'axios'
 
 const authStore = useAuthStore()
 const user = authStore.user
@@ -976,8 +985,15 @@ const systemMessage: OpenAI.Chat.ChatCompletionMessageParam = {
 - Ask one question at a time
 - Acknowledge responses naturally
 - Focus on understanding workplace preferences and values
-- After 3-4 exchanges or when you have enough information, end with "Great! Based on our conversation, I have a good understanding of your preferences. Let's review them together and make sure I haven't missed anything."
-- Do not continue the conversation after providing the summary`
+- After 3-4 exchanges or when you have enough information, provide a summary of detected preferences and ask for confirmation
+- Format your confirmation request like this:
+  "Great! Based on our conversation, I've identified these preferences that are important to you:
+  [list preferences]
+  
+  Is this correct? Would you like to add or modify anything?"
+- Only end the conversation after the user confirms the preferences
+- If the user wants to add or modify preferences, continue the conversation
+- Do not add farewell messages until the user confirms the preferences`
 }
 
 const isConversationComplete = ref(false)
@@ -1031,7 +1047,6 @@ const sendMessage = async () => {
                     userReply.includes('deen') || userReply.includes('sunnah') ||
                     userReply.includes('salaam') || userReply.includes('salam') ||
                     userReply.includes('mashaallah') || userReply.includes('inshaallah') ||
-                    userReply.includes('subhanallah') || userReply.includes('alhamdulillah') ||
                     // Additional religious accommodation terms
                     userReply.includes('friday prayer') || userReply.includes('jummah prayer') ||
                     userReply.includes('prayer room') || userReply.includes('prayer space') ||
@@ -1067,47 +1082,43 @@ const sendMessage = async () => {
       selectedPreferences.value.halalProducts = true
     }
 
-    // Check for Jewish identity and automatically set preferences
-    const isJewish = userReply.includes('jewish') || userReply.includes('judaism') || 
-                    userReply.includes('kosher') || userReply.includes('shabbat') ||
-                    userReply.includes('sabbath') || userReply.includes('synagogue') ||
-                    userReply.includes('torah') || userReply.includes('rabbi') ||
-                    userReply.includes('passover') || userReply.includes('hanukkah')
-
-    if (isJewish) {
-      selectedPreferences.value.kosherProducts = true
-      selectedPreferences.value.noPork = true
-      selectedPreferences.value.ethicalBusiness = true
+    // Check for work style preferences
+    if (userReply.includes('team') || userReply.includes('collaborative') || userReply.includes('group')) {
+      selectedPreferences.value.teamwork = true
+      selectedPreferences.value.collaborativeProjects = true
+    }
+    if (userReply.includes('independent') || userReply.includes('autonomous') || userReply.includes('solo')) {
+      selectedPreferences.value.individualWork = true
+      selectedPreferences.value.personalSpace = true
     }
 
-    // Check for vegetarian/vegan identity
-    const isVegetarian = userReply.includes('vegetarian') || userReply.includes('veg') || 
-                        userReply.includes('plant-based') || userReply.includes('meat-free')
-    const isVegan = userReply.includes('vegan') || userReply.includes('plant-only') || 
-                   userReply.includes('dairy-free') || userReply.includes('animal-free')
+    // Check for work arrangement preferences
+    if (userReply.includes('remote') || userReply.includes('work from home') || userReply.includes('wfh')) {
+      selectedPreferences.value.remoteWork = true
+      selectedPreferences.value.flexibleHours = true
+    }
+    if (userReply.includes('office') || userReply.includes('onsite') || userReply.includes('in-person')) {
+      selectedPreferences.value.officeWork = true
+      selectedPreferences.value.teamwork = true
+    }
 
-    if (isVegetarian) {
-      selectedPreferences.value.vegetarianProducts = true
-      selectedPreferences.value.noPork = true
+    // Check for learning and growth preferences
+    if (userReply.includes('learn') || userReply.includes('growth') || userReply.includes('development') || userReply.includes('training')) {
+      selectedPreferences.value.continuousLearning = true
+      selectedPreferences.value.mentorship = true
     }
-    if (isVegan) {
-      selectedPreferences.value.veganProducts = true
-      selectedPreferences.value.noPork = true
-      selectedPreferences.value.noAnimalTesting = true
+
+    // Check for social impact preferences
+    if (userReply.includes('impact') || userReply.includes('purpose') || userReply.includes('meaningful') || userReply.includes('contribution')) {
+      selectedPreferences.value.socialImpact = true
+      selectedPreferences.value.communityFocused = true
     }
-    
-    // Dietary preferences vs Core business values
-    if (userReply.includes('vegetarian') || userReply.includes('veg') || userReply.includes('plant-based')) {
-      if (userReply.includes('vegetarian business') || userReply.includes('vegetarian company') || 
-          userReply.includes('vegetarian products') || userReply.includes('vegetarian brand') ||
-          userReply.includes('vegetarian industry') || userReply.includes('vegetarian focused') ||
-          userReply.includes('vegetarian oriented') || userReply.includes('vegetarian based')) {
-        selectedPreferences.value.vegetarianProducts = true
-      } else if (userReply.includes('vegetarian food') || userReply.includes('vegetarian meals') ||
-                 userReply.includes('vegetarian options') || userReply.includes('vegetarian menu') ||
-                 userReply.includes('vegetarian catering') || userReply.includes('vegetarian diet')) {
-        selectedPreferences.value.dietaryOptions = true
-      }
+
+    // Check for family-friendly preferences
+    if (userReply.includes('family') || userReply.includes('parent') || userReply.includes('children') || userReply.includes('work-life')) {
+      selectedPreferences.value.familyFriendly = true
+      selectedPreferences.value.workLifeBalance = true
+      selectedPreferences.value.parentingFacilities = true
     }
 
     // Check if user wants to end the conversation
@@ -1120,14 +1131,179 @@ const sendMessage = async () => {
                       userReply.includes('that\'s it') ||
                       userReply.includes('that is it') ||
                       userReply.includes('finished') ||
-                      userReply.includes('complete')
+                      userReply.includes('complete') ||
+                      userReply.includes('thank you') ||
+                      userReply.includes('thanks') ||
+                      userReply.includes('thank you!') ||
+                      userReply.includes('thanks!') ||
+                      userReply.includes('that\'s it!') ||
+                      userReply.includes('that is it!') ||
+                      userReply.includes('that\'s all!') ||
+                      userReply.includes('that is all!') ||
+                      userReply.includes('i\'m done!') ||
+                      userReply.includes('i am done!') ||
+                      userReply.includes('no more!') ||
+                      userReply.includes('nothing else!') ||
+                      userReply.includes('finished!') ||
+                      userReply.includes('complete!') ||
+                      userReply.includes('okay') ||
+                      userReply.includes('ok') ||
+                      userReply.includes('okay!') ||
+                      userReply.includes('ok!') ||
+                      userReply.includes('sounds good') ||
+                      userReply.includes('sounds good!') ||
+                      userReply.includes('perfect') ||
+                      userReply.includes('perfect!') ||
+                      userReply.includes('great') ||
+                      userReply.includes('great!') ||
+                      userReply.includes('awesome') ||
+                      userReply.includes('awesome!') ||
+                      userReply.includes('excellent') ||
+                      userReply.includes('excellent!') ||
+                      userReply.includes('that works') ||
+                      userReply.includes('that works!') ||
+                      userReply.includes('that\'s perfect') ||
+                      userReply.includes('that is perfect') ||
+                      userReply.includes('that\'s perfect!') ||
+                      userReply.includes('that is perfect!') ||
+                      userReply.includes('that\'s great') ||
+                      userReply.includes('that is great') ||
+                      userReply.includes('that\'s great!') ||
+                      userReply.includes('that is great!') ||
+                      userReply.includes('that\'s awesome') ||
+                      userReply.includes('that is awesome') ||
+                      userReply.includes('that\'s awesome!') ||
+                      userReply.includes('that is awesome!') ||
+                      userReply.includes('that\'s excellent') ||
+                      userReply.includes('that is excellent') ||
+                      userReply.includes('that\'s excellent!') ||
+                      userReply.includes('that is excellent!') ||
+                      userReply.includes('i think that\'s it') ||
+                      userReply.includes('i think that is it') ||
+                      userReply.includes('i think that\'s all') ||
+                      userReply.includes('i think that is all') ||
+                      userReply.includes('i think that\'s it!') ||
+                      userReply.includes('i think that is it!') ||
+                      userReply.includes('i think that\'s all!') ||
+                      userReply.includes('i think that is all!') ||
+                      userReply.includes('i think i\'m done') ||
+                      userReply.includes('i think i am done') ||
+                      userReply.includes('i think i\'m done!') ||
+                      userReply.includes('i think i am done!') ||
+                      userReply.includes('i think that covers it') ||
+                      userReply.includes('i think that covers it!') ||
+                      userReply.includes('i think that\'s everything') ||
+                      userReply.includes('i think that is everything') ||
+                      userReply.includes('i think that\'s everything!') ||
+                      userReply.includes('i think that is everything!')
 
     if (wantsToEnd) {
-      // Add final summary message
+      // Create a summary of detected preferences by category
+      const preferencesByCategory = {
+        'Core Business Values': [] as string[],
+        'Workplace Culture': [] as string[],
+        'Work Style': [] as string[],
+        'Schedule Preferences': [] as string[],
+        'Workplace Accommodations': [] as string[],
+        'Company Values': [] as string[]
+      }
+      
+      // Core Business Values
+      if (selectedPreferences.value.halalProducts) preferencesByCategory['Core Business Values'].push('Halal products/services')
+      if (selectedPreferences.value.noAlcohol) preferencesByCategory['Core Business Values'].push('No alcohol-related business')
+      if (selectedPreferences.value.noGambling) preferencesByCategory['Core Business Values'].push('No gambling-related business')
+      if (selectedPreferences.value.noPork) preferencesByCategory['Core Business Values'].push('No pork-related business')
+      if (selectedPreferences.value.noInterest) preferencesByCategory['Core Business Values'].push('No interest-based finance')
+      if (selectedPreferences.value.ethicalBusiness) preferencesByCategory['Core Business Values'].push('Ethical business practices')
+      if (selectedPreferences.value.fairTrade) preferencesByCategory['Core Business Values'].push('Fair trade practices')
+      if (selectedPreferences.value.sustainable) preferencesByCategory['Core Business Values'].push('Sustainable business practices')
+      if (selectedPreferences.value.communityFocused) preferencesByCategory['Core Business Values'].push('Community-focused initiatives')
+      if (selectedPreferences.value.familyFriendly) preferencesByCategory['Core Business Values'].push('Family-friendly policies')
+      if (selectedPreferences.value.religiousAccommodations) preferencesByCategory['Core Business Values'].push('Religious accommodations')
+
+      // Workplace Culture
+      if (selectedPreferences.value.respectfulEnvironment) preferencesByCategory['Workplace Culture'].push('Respectful and inclusive environment')
+      if (selectedPreferences.value.transparency) preferencesByCategory['Workplace Culture'].push('Transparent communication')
+      if (selectedPreferences.value.diversityInclusion) preferencesByCategory['Workplace Culture'].push('Diversity and inclusion focus')
+      if (selectedPreferences.value.mentorship) preferencesByCategory['Workplace Culture'].push('Mentorship opportunities')
+      if (selectedPreferences.value.careerGrowth) preferencesByCategory['Workplace Culture'].push('Career growth paths')
+      if (selectedPreferences.value.continuousLearning) preferencesByCategory['Workplace Culture'].push('Continuous learning and development')
+      if (selectedPreferences.value.openCommunication) preferencesByCategory['Workplace Culture'].push('Open communication')
+      if (selectedPreferences.value.feedbackCulture) preferencesByCategory['Workplace Culture'].push('Culture of constructive feedback')
+      if (selectedPreferences.value.innovativeCulture) preferencesByCategory['Workplace Culture'].push('Innovative culture')
+      if (selectedPreferences.value.workLifeBalance) preferencesByCategory['Workplace Culture'].push('Work-life balance focus')
+
+      // Work Style
+      if (selectedPreferences.value.teamwork) preferencesByCategory['Work Style'].push('Team-oriented work')
+      if (selectedPreferences.value.individualWork) preferencesByCategory['Work Style'].push('Independent work opportunities')
+      if (selectedPreferences.value.hybridStyle) preferencesByCategory['Work Style'].push('Mix of team and individual work')
+      if (selectedPreferences.value.structuredWork) preferencesByCategory['Work Style'].push('Structured and organized work')
+      if (selectedPreferences.value.creativeWork) preferencesByCategory['Work Style'].push('Creative and innovative projects')
+      if (selectedPreferences.value.clientFacing) preferencesByCategory['Work Style'].push('Client-facing opportunities')
+      if (selectedPreferences.value.internalRole) preferencesByCategory['Work Style'].push('Internal-focused role')
+      if (selectedPreferences.value.leadershipRole) preferencesByCategory['Work Style'].push('Leadership opportunities')
+      if (selectedPreferences.value.collaborativeProjects) preferencesByCategory['Work Style'].push('Collaborative project work')
+      if (selectedPreferences.value.crossFunctional) preferencesByCategory['Work Style'].push('Cross-functional team exposure')
+
+      // Schedule Preferences
+      if (selectedPreferences.value.flexibleHours) preferencesByCategory['Schedule Preferences'].push('Flexible working hours')
+      if (selectedPreferences.value.fixedSchedule) preferencesByCategory['Schedule Preferences'].push('Fixed 9-5 schedule')
+      if (selectedPreferences.value.remoteWork) preferencesByCategory['Schedule Preferences'].push('Remote work options')
+      if (selectedPreferences.value.hybridWork) preferencesByCategory['Schedule Preferences'].push('Hybrid work arrangement')
+      if (selectedPreferences.value.officeWork) preferencesByCategory['Schedule Preferences'].push('Office-based work')
+      if (selectedPreferences.value.fridayOff) preferencesByCategory['Schedule Preferences'].push('Fridays off')
+      if (selectedPreferences.value.fourDayWeek) preferencesByCategory['Schedule Preferences'].push('Four-day work week')
+      if (selectedPreferences.value.standardHours) preferencesByCategory['Schedule Preferences'].push('Standard business hours')
+      if (selectedPreferences.value.flexibleBreaks) preferencesByCategory['Schedule Preferences'].push('Flexible break times')
+      if (selectedPreferences.value.timeZoneFlexible) preferencesByCategory['Schedule Preferences'].push('Time zone flexibility')
+
+      // Workplace Accommodations
+      if (selectedPreferences.value.prayerRoom) preferencesByCategory['Workplace Accommodations'].push('Prayer room available')
+      if (selectedPreferences.value.restArea) preferencesByCategory['Workplace Accommodations'].push('Rest and relaxation areas')
+      if (selectedPreferences.value.quietSpace) preferencesByCategory['Workplace Accommodations'].push('Quiet spaces for focus work')
+      if (selectedPreferences.value.dressCode) preferencesByCategory['Workplace Accommodations'].push('Modest/flexible dress code')
+      if (selectedPreferences.value.dietaryOptions) preferencesByCategory['Workplace Accommodations'].push('Dietary accommodation')
+      if (selectedPreferences.value.ergonomicSetup) preferencesByCategory['Workplace Accommodations'].push('Ergonomic workspace setup')
+      if (selectedPreferences.value.wellnessPrograms) preferencesByCategory['Workplace Accommodations'].push('Wellness programs')
+      if (selectedPreferences.value.parentingFacilities) preferencesByCategory['Workplace Accommodations'].push('Parenting facilities')
+      if (selectedPreferences.value.accessibilityNeeds) preferencesByCategory['Workplace Accommodations'].push('Accessibility accommodations')
+      if (selectedPreferences.value.personalSpace) preferencesByCategory['Workplace Accommodations'].push('Personal workspace options')
+
+      // Company Values
+      if (selectedPreferences.value.environmentalFocus) preferencesByCategory['Company Values'].push('Environmental sustainability focus')
+      if (selectedPreferences.value.socialImpact) preferencesByCategory['Company Values'].push('Social impact mission')
+      if (selectedPreferences.value.techInnovation) preferencesByCategory['Company Values'].push('Technology innovation focus')
+      if (selectedPreferences.value.customerCentric) preferencesByCategory['Company Values'].push('Customer-centric approach')
+      if (selectedPreferences.value.employeeCentric) preferencesByCategory['Company Values'].push('Employee-centric culture')
+      if (selectedPreferences.value.globalMindset) preferencesByCategory['Company Values'].push('Global business mindset')
+      if (selectedPreferences.value.localImpact) preferencesByCategory['Company Values'].push('Local community impact')
+      if (selectedPreferences.value.startupMindset) preferencesByCategory['Company Values'].push('Startup/entrepreneurial culture')
+      if (selectedPreferences.value.corporateStability) preferencesByCategory['Company Values'].push('Corporate stability')
+      if (selectedPreferences.value.nonProfit) preferencesByCategory['Company Values'].push('Non-profit/social enterprise')
+
+      // Add final summary message with detected preferences
+      let summaryMessage = "Great! Based on our conversation, I've identified these preferences that are important to you:\n\n"
+      
+      let hasPreferences = false
+      for (const [category, preferences] of Object.entries(preferencesByCategory)) {
+        if (preferences.length > 0) {
+          hasPreferences = true
+          summaryMessage += `${category}:\n`
+          summaryMessage += preferences.map(pref => `• ${pref}`).join('\n')
+          summaryMessage += '\n\n'
+        }
+      }
+      
+      if (!hasPreferences) {
+        summaryMessage += "I haven't detected any specific preferences yet. Would you like to tell me more about what's important to you in a workplace?"
+      }
+
       chatMessages.value.push({
         role: 'assistant',
-        content: "Great! Based on our conversation, I have a good understanding of your preferences. Let's review them together and make sure I haven't missed anything."
+        content: summaryMessage
       })
+      
+      // Set conversation as complete and move to preferences step
       isConversationComplete.value = true
     } else {
       // Continue the conversation with the AI's response
@@ -1188,9 +1364,7 @@ const updatePreferences = async (preferences: Partial<Preferences>) => {
 const savePreferences = async () => {
   try {
     await updatePreferences(selectedPreferences.value)
-    if (currentStep.value === 0) {
-      currentStep.value = 2 // Move directly to recommended jobs
-    }
+    currentStep.value = 2 // Move directly to recommended jobs
   } catch (error) {
     console.error('Error saving preferences:', error)
   }
