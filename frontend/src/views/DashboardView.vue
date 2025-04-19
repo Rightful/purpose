@@ -536,7 +536,6 @@ import { useAuthStore } from '@/stores/auth'
 import OpenAI from 'openai'
 import * as pdfjsLib from 'pdfjs-dist'
 import mammoth from 'mammoth'
-import { fileTypeFromBlob } from 'file-type'
 import axios from 'axios'
 
 const authStore = useAuthStore()
@@ -854,11 +853,6 @@ const conversationContext = ref({
 })
 
 // Utility functions
-async function detectMime(blob: Blob): Promise<string> {
-  const type = await fileTypeFromBlob(blob)
-  return type?.mime || blob.type || 'application/octet-stream'
-}
-
 async function extractPdfText(buffer: ArrayBuffer): Promise<string> {
   const pdf = await pdfjsLib.getDocument(buffer).promise
   let fullText = ''
@@ -916,13 +910,12 @@ const handleCVUpload = async (event: Event) => {
     isLoading.value = true
 
     try {
-      const mime = await detectMime(file)
       const buffer = await file.arrayBuffer()
       let text = ''
 
-      if (mime === 'application/pdf') {
+      if (fileType === 'application/pdf') {
         text = await extractPdfText(buffer)
-      } else if (mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
         text = await extractDocxText(buffer)
       } else {
         text = await extractTxtText(file)
