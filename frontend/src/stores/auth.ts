@@ -1,87 +1,56 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-export type UserRole = 'company' | 'talent'
+import { ref, computed } from 'vue'
 
 interface User {
-  id: string
-  email: string
-  fullName: string
-  role: UserRole
-}
-
-interface SignUpData {
   name: string
   email: string
-  password: string
-  role: 'company' | 'talent'
+  role: 'talent' | 'company'
+  preferences?: {
+    alcohol: boolean
+    pork: boolean
+    gambling: boolean
+    interest: boolean
+    environmental: boolean
+    social: boolean
+    governance: boolean
+    diversity: boolean
+    workLifeBalance: boolean
+    prayer: boolean
+    dressCode: boolean
+    debtToEquity: number
+    currentRatio: number
+    returnOnEquity: number
+  }
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const router = useRouter()
   const user = ref<User | null>(null)
-  const isAuthenticated = ref(false)
   const isLoading = ref(false)
-  const error = ref<string | null>(null)
 
-  const signIn = async (email: string, password: string) => {
+  const isAuthenticated = computed(() => !!user.value)
+
+  const signUp = async (data: {
+    name: string
+    email: string
+    role: 'talent' | 'company'
+  }) => {
     try {
       isLoading.value = true
-      error.value = null
       
-      // TODO: Replace with actual API call
-      // Simulated API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Demo accounts
-      if (email === 'company@example.com' && password === 'password') {
-        user.value = {
-          id: '1',
-          email: 'company@example.com',
-          fullName: 'Demo Company',
-          role: 'company'
-        }
-      } else if (email === 'talent@example.com' && password === 'password') {
-        user.value = {
-          id: '2',
-          email: 'talent@example.com',
-          fullName: 'Demo Talent',
-          role: 'talent'
-        }
-      } else {
-        throw new Error('Invalid credentials')
-      }
-
-      isAuthenticated.value = true
-      router.push(user.value.role === 'company' ? '/company/dashboard' : '/talent/dashboard')
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'An error occurred during sign in'
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const signUp = async (data: SignUpData) => {
-    try {
-      isLoading.value = true
-      error.value = null
-      
-      // TODO: Replace with actual API call
-      // Simulated API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      user.value = {
-        id: Math.random().toString(36).substr(2, 9),
+      // Create simple user object
+      const newUser: User = {
+        name: data.name,
         email: data.email,
-        fullName: data.name,
         role: data.role
       }
 
-      isAuthenticated.value = true
-      router.push(data.role === 'company' ? '/company/dashboard' : '/talent/dashboard')
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'An error occurred during sign up'
+      // Store user in localStorage
+      localStorage.setItem('user', JSON.stringify(newUser))
+      user.value = newUser
+      
+      return newUser
+    } catch (error: any) {
+      throw new Error(error.message || 'An error occurred during signup')
     } finally {
       isLoading.value = false
     }
@@ -89,17 +58,46 @@ export const useAuthStore = defineStore('auth', () => {
 
   const signOut = () => {
     user.value = null
-    isAuthenticated.value = false
-    router.push('/')
+    localStorage.removeItem('user')
+  }
+
+  const checkAuth = () => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      user.value = JSON.parse(storedUser)
+    }
+  }
+
+  const updatePreferences = async (preferences: User['preferences']) => {
+    try {
+      isLoading.value = true
+      if (!user.value) throw new Error('User not authenticated')
+
+      // Update user preferences
+      const updatedUser = {
+        ...user.value,
+        preferences
+      }
+
+      // Store updated user in localStorage
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      user.value = updatedUser
+
+      return updatedUser
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to update preferences')
+    } finally {
+      isLoading.value = false
+    }
   }
 
   return {
     user,
-    isAuthenticated,
     isLoading,
-    error,
-    signIn,
+    isAuthenticated,
     signUp,
-    signOut
+    signOut,
+    checkAuth,
+    updatePreferences
   }
 }) 

@@ -16,10 +16,25 @@ export interface Job {
   experience: string;
   responsibilities: string[];
   faithAlignment: {
-    halalIncome: boolean;
+    ethicalIncome: boolean;
     prayerFriendly: boolean;
     flexibleHours: boolean;
     modestDressCode: boolean;
+  };
+  ethicalCompliance: {
+    alcohol: boolean;
+    pork: boolean;
+    gambling: boolean;
+    conventionalFinance: boolean;
+    debtRatio: number;
+    nonEthicalIncomeRatio: number;
+    prayerBreak: boolean;
+    modestDress: boolean;
+    ethicalFood: boolean;
+    environmentalImpact: boolean;
+    socialResponsibility: boolean;
+    fairTrade: boolean;
+    animalWelfare: boolean;
   };
   postedDate: string;
   applicationDeadline: string;

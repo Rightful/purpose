@@ -9,13 +9,19 @@
 
 <script setup lang="ts">
 import NavigationBar from '@/components/NavigationBar.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
+const authStore = useAuthStore()
 
 const mainPadding = computed(() => {
   return route.path === '/jobs' || route.path === '/talent' ? 'pt-24' : 'pt-16'
+})
+
+onMounted(() => {
+  authStore.checkAuth()
 })
 </script>
 

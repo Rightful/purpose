@@ -43,8 +43,8 @@
                 :class="[
                   'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
                   job.type.toLowerCase() === 'full-time' 
-                    ? 'bg-primary-600 text-white border border-primary-700' 
-                    : 'bg-primary-50 text-primary-600 border border-primary-100'
+                    ? 'bg-[#a680ff] text-white border border-[#a680ff]' 
+                    : 'bg-[#a680ff]/10 text-[#a680ff] border border-[#a680ff]/20'
                 ]"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,7 +164,7 @@
         <div class="mt-8">
           <a 
             :href="'mailto:' + job.contactEmail + '?subject=Application for ' + job.title + ' at ' + job.company"
-            class="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 text-lg font-medium"
+            class="w-full bg-[#a680ff] text-white py-3 px-6 rounded-lg hover:bg-[#a680ff]/90 transition-colors flex items-center justify-center gap-2 text-lg font-medium"
           >
             <span>Apply Now</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -177,12 +177,12 @@
 
     <!-- Loading State -->
     <div v-else-if="loading" class="flex justify-center items-center h-64">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a680ff]"></div>
     </div>
 
     <!-- Error State -->
     <div v-else class="text-center py-12">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-primary-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-[#a680ff]/40 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       <p class="text-gray-600 text-lg">Job not found.</p>

@@ -10,7 +10,31 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('@/views/HomeView.vue')
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: () => import('@/views/SignUpView.vue')
+    },
+    {
+      path: '/signin',
+      name: 'signin',
+      component: () => import('@/views/SignInView.vue')
+    },
+    {
+      path: '/auth/signup',
+      redirect: '/signup'
+    },
+    {
+      path: '/auth/signin',
+      redirect: '/signin'
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/DashboardView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/jobs',
@@ -34,16 +58,6 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/auth/signup',
-      name: 'signup',
-      component: () => import('../views/auth/SignUpView.vue')
-    },
-    {
-      path: '/auth/signin',
-      name: 'signin',
-      component: () => import('../views/auth/SignInView.vue')
-    },
-    {
       path: '/company/dashboard',
       name: 'company-dashboard',
       component: () => import('../views/dashboard/CompanyDashboardView.vue'),
@@ -61,20 +75,16 @@ const router = createRouter({
 // Navigation guard
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  
-  if (to.meta.requiresAuth) {
-    if (!authStore.isAuthenticated) {
-      next({ name: 'signin' })
-      return
-    }
-    
-    if (to.meta.role && authStore.user?.role !== to.meta.role) {
-      next({ name: 'home' })
-      return
-    }
+  const isAuthenticated = authStore.isAuthenticated
+  const user = authStore.user
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/signin')
+  } else if (isAuthenticated && (to.path === '/signin' || to.path === '/auth/signin')) {
+    next('/dashboard')
+  } else {
+    next()
   }
-  
-  next()
 })
 
 // Scroll to top after navigation
